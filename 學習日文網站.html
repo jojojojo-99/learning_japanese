@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日語學習神器 - 50音與必學單字特訓</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            morandi: {
+              50: '#F7F5F9',
+              100: '#E6E1EE',
+              200: '#D2C9DF',
+              300: '#B8A9C9',
+              400: '#9E8BB0',
+              500: '#8A7B9B',
+              600: '#726183',
+              700: '#5B4B6A',
+              800: '#433650',
+              900: '#2D2738',
+            }
+          },
+          fontFamily: {
+            sans: ['Nunito', 'Noto Sans JP', 'sans-serif'],
+            jp: ['Noto Sans JP', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #F7F5F9;
+      color: #2D2738;
+      font-family: 'Nunito', 'Noto Sans JP', sans-serif;
+    }
+    
+    /* Flip Card Styles */
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+    .transform-style-3d {
+      transform-style: preserve-3d;
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+    
+    /* Progress Circle */
+    .progress-ring__circle {
+      transition: stroke-dashoffset 0.35s;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #E6E1EE;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #B8A9C9;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8A7B9B;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-morandi-300 selection:text-morandi-900">
+
+  <!-- Header Section -->
+  <header class="bg-white/80 backdrop-blur-md border-b border-morandi-100 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-morandi-500 to-morandi-300 flex items-center justify-center text-white shadow-md">
+          <span class="text-xl font-bold font-jp">あ</span>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-morandi-900 leading-tight">日語學習特訓站</h1>
+          <p class="text-xs text-morandi-500">50音卡片 & 常用圖解50單字</p>
+        </div>
+      </div>
+
+      <!-- Main Navigation Tabs -->
+      <nav class="flex bg-morandi-100 p-1 rounded-xl w-full sm:w-auto">
+        <button id="nav-kana" onclick="switchMainTab('kana')" class="flex-1 sm:flex-none px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-white text-morandi-800 shadow-sm">
+          <i class="fa-solid font-jp mr-1">あ</i> 50音隨機快刷
+        </button>
+        <button id="nav-vocab" onclick="switchMainTab('vocab')" class="flex-1 sm:flex-none px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-morandi-600 hover:text-morandi-800">
+          <i class="fa-solid fa-book-bookmark mr-1.5"></i> 50單字特訓
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="max-w-5xl mx-auto px-4 py-6 flex-grow w-full">
+
+    <!-- ================= MODE 1: 50-ON FLASHCARDS ================= -->
+    <section id="kana-section" class="space-y-6">
+      <!-- Filter Bar -->
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-morandi-100 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-semibold text-morandi-500 uppercase tracking-wider mr-1">假名類型：</span>
+          <button id="filter-all" onclick="setKanaFilter('all')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-morandi-500 text-white shadow-xs">全部</button>
+          <button id="filter-hira" onclick="setKanaFilter('hira')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-morandi-100 text-morandi-700 hover:bg-morandi-200">平假名</button>
+          <button id="filter-kata" onclick="setKanaFilter('kata')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-morandi-100 text-morandi-700 hover:bg-morandi-200">片假名</button>
+        </div>
+
+        <div class="flex items-center space-x-3 text-xs text-morandi-600">
+          <label class="flex items-center space-x-2 cursor-pointer">
+            <input type="checkbox" id="auto-next-toggle" onchange="toggleAutoNext()" class="rounded text-morandi-500 focus:ring-morandi-400 w-4 h-4">
+            <span>自動切換下一張</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Main Flashcard -->
+      <div class="max-w-md mx-auto">
+        <div class="bg-white rounded-3xl p-8 shadow-lg border border-morandi-100 text-center relative overflow-hidden flex flex-col items-center justify-between min-h-[400px]">
+          
+          <!-- Top Row: Audio & Type Tag -->
+          <div class="w-full flex justify-between items-center">
+            <span id="kana-type-badge" class="px-3 py-1 rounded-full text-xs font-medium bg-morandi-100 text-morandi-700">平假名</span>
+            <button onclick="playTTS(currentKana.kana)" class="w-10 h-10 rounded-full bg-morandi-50 text-morandi-600 hover:bg-morandi-100 flex items-center justify-center transition-colors">
+              <i class="fa-solid fa-volume-high"></i>
+            </button>
+          </div>
+
+          <!-- Countdown Ring + Character Display -->
+          <div class="relative my-6 flex items-center justify-center">
+            <!-- SVG Countdown Ring -->
+            <svg class="w-56 h-56">
+              <circle class="text-morandi-100" stroke-width="8" stroke="currentColor" fill="transparent" r="90" cx="112" cy="112" />
+              <circle id="countdown-circle" class="text-morandi-400 progress-ring__circle" stroke-width="8" stroke-dasharray="565.48" stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="90" cx="112" cy="112" />
+            </svg>
+            
+            <!-- Character Text -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span id="kana-char" class="text-7xl font-bold font-jp text-morandi-900 transition-all duration-300 scale-100">あ</span>
+              <span id="countdown-num" class="text-xs text-morandi-400 font-semibold mt-2">10 秒</span>
+            </div>
+          </div>
+
+          <!-- Answer Box (Hidden / Revealed) -->
+          <div id="kana-answer-container" class="w-full min-h-[72px] flex items-center justify-center bg-morandi-50 rounded-2xl p-3 border border-morandi-100 transition-all duration-300">
+            <button id="reveal-btn" onclick="revealKanaAnswer()" class="text-morandi-600 font-semibold hover:text-morandi-800 flex items-center gap-2">
+              <i class="fa-solid fa-eye"></i> 顯示羅馬拼音
+            </button>
+            <div id="answer-content" class="hidden text-center">
+              <div id="kana-romaji" class="text-3xl font-bold text-morandi-700 tracking-wide">a</div>
+              <div id="kana-pair" class="text-xs text-morandi-400 mt-1">對應：<span id="kana-pair-text">ア</span></div>
+            </div>
+          </div>
+
+          <!-- Bottom Control Buttons -->
+          <div class="grid grid-cols-3 gap-3 w-full mt-6">
+            <button onclick="prevKana()" class="py-2.5 rounded-xl bg-morandi-100 text-morandi-700 hover:bg-morandi-200 font-semibold text-sm transition-colors flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-arrow-left"></i> 上一張
+            </button>
+            <button id="pause-btn" onclick="togglePauseTimer()" class="py-2.5 rounded-xl bg-morandi-200 text-morandi-800 hover:bg-morandi-300 font-semibold text-sm transition-colors flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-pause" id="pause-icon"></i> <span id="pause-text">暫停</span>
+            </button>
+            <button onclick="nextKana()" class="py-2.5 rounded-xl bg-morandi-500 text-white hover:bg-morandi-600 font-semibold text-sm transition-colors shadow-md flex items-center justify-center gap-1.5">
+              下一張 <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================= MODE 2: IMAGE VOCABULARY LEARNING & QUIZ ================= -->
+    <section id="vocab-section" class="hidden space-y-6">
+      
+      <!-- Sub Navigation Tabs -->
+      <div class="flex justify-center border-b border-morandi-200">
+        <div class="flex space-x-8">
+          <button id="subnav-study" onclick="switchVocabSubTab('study')" class="py-3 px-2 border-b-2 border-morandi-500 text-morandi-800 font-bold text-sm flex items-center gap-2">
+            <i class="fa-solid fa-graduation-cap"></i> 學習卡片 (50單字)
+          </button>
+          <button id="subnav-quiz" onclick="switchVocabSubTab('quiz')" class="py-3 px-2 border-b-2 border-transparent text-morandi-500 hover:text-morandi-700 font-semibold text-sm flex items-center gap-2">
+            <i class="fa-solid fa-circle-question"></i> 單字測驗挑戰
+          </button>
+        </div>
+      </div>
+
+      <!-- SUB TAB 1: STUDY CARDS -->
+      <div id="vocab-study-view" class="space-y-6">
+        
+        <!-- Search & Control Header -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-morandi-100 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="relative w-full md:w-72">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-morandi-400 text-sm"></i>
+            <input type="text" id="vocab-search" oninput="filterVocabList()" placeholder="搜尋日文、羅馬拼音或中文..." class="w-full pl-10 pr-4 py-2 rounded-xl bg-morandi-50 border border-morandi-100 text-sm focus:outline-none focus:ring-2 focus:ring-morandi-300 text-morandi-800">
+          </div>
+
+          <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+            <button onclick="playAllVocabAudio()" class="px-4 py-2 rounded-xl bg-morandi-100 hover:bg-morandi-200 text-morandi-700 font-semibold text-xs flex items-center gap-2 transition-colors">
+              <i class="fa-solid fa-volume-low"></i> 播放全部
+            </button>
+            <span class="text-xs text-morandi-400">共 <span id="vocab-count">50</span> 個單字</span>
+          </div>
+        </div>
+
+        <!-- Vocab Grid -->
+        <div id="vocab-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Dynamically populated card items -->
+        </div>
+      </div>
+
+      <!-- SUB TAB 2: QUIZ CHALLENGE -->
+      <div id="vocab-quiz-view" class="hidden space-y-6">
+        
+        <!-- Quiz Config / Start Box -->
+        <div id="quiz-start-box" class="bg-white rounded-3xl p-8 shadow-sm border border-morandi-100 max-w-xl mx-auto text-center space-y-6">
+          <div class="w-16 h-16 rounded-2xl bg-morandi-100 text-morandi-600 flex items-center justify-center mx-auto text-2xl">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-morandi-900">單字測驗挑戰</h2>
+            <p class="text-xs text-morandi-500 mt-1">測驗內容來自圖檔中的 50 個基礎日語單字</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+            <div class="p-4 rounded-2xl border border-morandi-100 bg-morandi-50/50">
+              <label class="block text-xs font-bold text-morandi-600 mb-2">測驗模式</label>
+              <select id="quiz-type-select" class="w-full bg-white border border-morandi-200 rounded-xl px-3 py-2 text-sm text-morandi-800 focus:outline-none focus:ring-2 focus:ring-morandi-300">
+                <option value="mc">單詞選擇題 (看日文選中文)</option>
+                <option value="fill">羅馬拼音填空 (像圖檔練習)</option>
+              </select>
+            </div>
+
+            <div class="p-4 rounded-2xl border border-morandi-100 bg-morandi-50/50">
+              <label class="block text-xs font-bold text-morandi-600 mb-2">題數設定</label>
+              <select id="quiz-amount-select" class="w-full bg-white border border-morandi-200 rounded-xl px-3 py-2 text-sm text-morandi-800 focus:outline-none focus:ring-2 focus:ring-morandi-300">
+                <option value="10">10 題</option>
+                <option value="20">20 題</option>
+                <option value="50">全部 50 題</option>
+              </select>
+            </div>
+          </div>
+
+          <button onclick="startQuiz()" class="w-full py-3.5 rounded-2xl bg-morandi-500 hover:bg-morandi-600 text-white font-bold text-base transition-colors shadow-md">
+            開始測驗
+          </button>
+        </div>
+
+        <!-- Active Quiz Play Area -->
+        <div id="quiz-play-box" class="hidden max-w-xl mx-auto space-y-4">
+          <!-- Quiz Header Status -->
+          <div class="flex justify-between items-center text-sm font-semibold text-morandi-600 bg-white p-4 rounded-2xl border border-morandi-100">
+            <span>題目 <span id="quiz-current-idx">1</span> / <span id="quiz-total-count">10</span></span>
+            <div class="flex items-center gap-3">
+              <span class="text-xs text-morandi-400">得分: <span id="quiz-score" class="text-morandi-700 font-bold">0</span></span>
+              <button onclick="quitQuiz()" class="text-xs text-red-400 hover:text-red-600">結束測驗</button>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="w-full bg-morandi-100 h-2 rounded-full overflow-hidden">
+            <div id="quiz-progress-bar" class="bg-morandi-500 h-full w-0 transition-all duration-300"></div>
+          </div>
+
+          <!-- Question Card -->
+          <div class="bg-white rounded-3xl p-8 shadow-sm border border-morandi-100 text-center space-y-6">
+            <div class="flex justify-center items-center gap-3">
+              <span id="quiz-question-num" class="text-xs px-2.5 py-1 rounded-full bg-morandi-100 text-morandi-700 font-bold">No.1</span>
+              <button onclick="playQuizAudio()" class="text-morandi-500 hover:text-morandi-700 text-lg">
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+            </div>
+
+            <div id="quiz-question-display" class="text-4xl font-bold font-jp text-morandi-900 tracking-wide">
+              あか
+            </div>
+
+            <!-- Multiple Choice Container -->
+            <div id="quiz-options-container" class="grid grid-cols-1 gap-3 pt-2">
+              <!-- Dynamically generated options -->
+            </div>
+
+            <!-- Fill-in Romaji Container -->
+            <div id="quiz-fill-container" class="hidden space-y-4 pt-2">
+              <p id="quiz-fill-hint" class="text-sm text-morandi-500">請填寫完整的羅馬拼音：</p>
+              <div class="flex gap-2 max-w-xs mx-auto">
+                <input type="text" id="quiz-fill-input" placeholder="例如: aka" class="flex-1 px-4 py-2.5 rounded-xl border border-morandi-200 text-center font-bold text-morandi-800 focus:outline-none focus:ring-2 focus:ring-morandi-300">
+                <button onclick="submitFillAnswer()" class="px-5 py-2.5 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition-colors">送出</button>
+              </div>
+            </div>
+
+            <!-- Feedback Message -->
+            <div id="quiz-feedback" class="hidden text-sm font-bold p-3 rounded-xl"></div>
+          </div>
+        </div>
+
+        <!-- Quiz Result Screen -->
+        <div id="quiz-result-box" class="hidden max-w-xl mx-auto bg-white rounded-3xl p-8 shadow-sm border border-morandi-100 text-center space-y-6">
+          <div class="w-20 h-20 rounded-full bg-morandi-100 text-morandi-600 flex items-center justify-center mx-auto text-3xl">
+            <i class="fa-solid fa-trophy"></i>
+          </div>
+
+          <div>
+            <h2 class="text-2xl font-bold text-morandi-900">測驗完成！</h2>
+            <p class="text-sm text-morandi-500 mt-1">太棒了，繼續保持練習吧！</p>
+          </div>
+
+          <div class="bg-morandi-50 p-6 rounded-2xl border border-morandi-100 grid grid-cols-2 gap-4">
+            <div>
+              <span class="text-xs text-morandi-400 font-semibold block">最終得分</span>
+              <span id="result-score" class="text-3xl font-bold text-morandi-700">80 %</span>
+            </div>
+            <div>
+              <span class="text-xs text-morandi-400 font-semibold block">答對題數</span>
+              <span id="result-correct-count" class="text-3xl font-bold text-morandi-700">8 / 10</span>
+            </div>
+          </div>
+
+          <button onclick="resetQuizView()" class="w-full py-3.5 rounded-2xl bg-morandi-500 hover:bg-morandi-600 text-white font-bold text-base transition-colors shadow-md">
+            再試一次
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-morandi-100 py-4 text-center text-xs text-morandi-400">
+    <p>日語學習神器 &copy; 50音卡片 & 圖解50單字練習頁面</p>
+  </footer>
+
+  <!-- JavaScript Logic -->
+  <script>
+    /* ================= DATASETS ================= */
+    
+    // 50 Kana Dataset (Hiragana & Katakana Pairs)
+    const KANA_DATA = [
+      { hira: 'あ', kata: 'ア', romaji: 'a' }, { hira: 'い', kata: 'イ', romaji: 'i' },
+      { hira: 'う', kata: 'ウ', romaji: 'u' }, { hira: 'え', kata: 'エ', romaji: 'e' },
+      { hira: 'お', kata: 'オ', romaji: 'o' }, { hira: 'か', kata: 'カ', romaji: 'ka' },
+      { hira: 'き', kata: 'キ', romaji: 'ki' }, { hira: 'く', kata: 'ク', romaji: 'ku' },
+      { hira: 'け', kata: 'ケ', romaji: 'ke' }, { hira: 'こ', kata: 'コ', romaji: 'ko' },
+      { hira: 'さ', kata: 'サ', romaji: 'sa' }, { hira: 'し', kata: 'シ', romaji: 'shi' },
+      { hira: 'す', kata: 'ス', romaji: 'su' }, { hira: 'せ', kata: 'セ', romaji: 'se' },
+      { hira: 'そ', kata: 'ソ', romaji: 'so' }, { hira: 'た', kata: 'タ', romaji: 'ta' },
+      { hira: 'ち', kata: 'チ', romaji: 'chi' }, { hira: 'つ', kata: 'ツ', romaji: 'tsu' },
+      { hira: 'て', kata: 'テ', romaji: 'te' }, { hira: 'と', kata: 'ト', romaji: 'to' },
+      { hira: 'な', kata: 'ナ', romaji: 'na' }, { hira: 'に', kata: 'ニ', romaji: 'ni' },
+      { hira: 'ぬ', kata: 'ヌ', romaji: 'nu' }, { hira: 'ね', kata: 'ネ', romaji: 'ne' },
+      { hira: 'の', kata: 'ノ', romaji: 'no' }, { hira: 'は', kata: 'ハ', romaji: 'ha' },
+      { hira: 'ひ', kata: 'ヒ', romaji: 'hi' }, { hira: 'ふ', kata: 'フ', romaji: 'fu' },
+      { hira: 'へ', kata: 'ヘ', romaji: 'he' }, { hira: 'ほ', kata: 'ホ', romaji: 'ho' },
+      { hira: 'ま', kata: 'マ', romaji: 'ma' }, { hira: 'み', kata: 'ミ', romaji: 'mi' },
+      { hira: 'む', kata: 'ム', romaji: 'mu' }, { hira: 'め', kata: 'メ', romaji: 'me' },
+      { hira: 'も', kata: 'モ', romaji: 'mo' }, { hira: 'や', kata: 'ヤ', romaji: 'ya' },
+      { hira: 'ゆ', kata: 'ユ', romaji: 'yu' }, { hira: 'よ', kata: 'ヨ', romaji: 'yo' },
+      { hira: 'ら', kata: 'ラ', romaji: 'ra' }, { hira: 'り', kata: 'リ', romaji: 'ri' },
+      { hira: 'る', kata: 'ル', romaji: 'ru' }, { hira: 'れ', kata: 'レ', romaji: 're' },
+      { hira: 'ろ', kata: 'ロ', romaji: 'ro' }, { hira: 'わ', kata: 'ワ', romaji: 'wa' },
+      { hira: 'を', kata: 'ヲ', romaji: 'wo' }, { hira: 'ん', kata: 'ン', romaji: 'n' }
+    ];
+
+    // Exactly Digitized 50 Vocabulary Items from the Image
+    const VOCAB_DATA = [
+      { id: 1, jp: "あか", romaji: "aka", parts: [{j:"あ",r:"a"}, {j:"か",r:"ka"}], meaning: "赤・紅 (紅色)" },
+      { id: 2, jp: "いか", romaji: "ika", parts: [{j:"い",r:"i"}, {j:"か",r:"ka"}], meaning: "烏賊 (魷魚/烏賊)" },
+      { id: 3, jp: "うま", romaji: "uma", parts: [{j:"う",r:"u"}, {j:"ま",r:"ma"}], meaning: "馬 (馬)" },
+      { id: 4, jp: "いえ", romaji: "ie", parts: [{j:"い",r:"i"}, {j:"え",r:"e"}], meaning: "家 (房子/家)" },
+      { id: 5, jp: "おおかみ", romaji: "ookami", parts: [{j:"お",r:"o"}, {j:"お",r:"o"}, {j:"か",r:"ka"}, {j:"み",r:"mi"}], meaning: "狼 (狼)" },
+      { id: 6, jp: "かに", romaji: "kani", parts: [{j:"か",r:"ka"}, {j:"に",r:"ni"}], meaning: "蟹 (螃蟹)" },
+      { id: 7, jp: "き", romaji: "ki", parts: [{j:"き",r:"ki"}], meaning: "木、氣 (樹木/天氣)" },
+      { id: 8, jp: "くま", romaji: "kuma", parts: [{j:"く",r:"ku"}, {j:"ま",r:"ma"}], meaning: "熊 (熊)" },
+      { id: 9, jp: "とけい", romaji: "tokei", parts: [{j:"と",r:"to"}, {j:"け",r:"ke"}, {j:"い",r:"i"}], meaning: "時計 (手錶/時鐘)" },
+      { id: 10, jp: "こけ", romaji: "koke", parts: [{j:"こ",r:"ko"}, {j:"け",r:"ke"}], meaning: "苔 (苔蘚)" },
+      { id: 11, jp: "さかな", romaji: "sakana", parts: [{j:"さ",r:"sa"}, {j:"か",r:"ka"}, {j:"な",r:"na"}], meaning: "魚 (魚)" },
+      { id: 12, jp: "しか", romaji: "shika", parts: [{j:"し",r:"shi"}, {j:"か",r:"ka"}], meaning: "鹿 (鹿)" },
+      { id: 13, jp: "すし", romaji: "sushi", parts: [{j:"す",r:"su"}, {j:"し",r:"shi"}], meaning: "壽司 (壽司)" },
+      { id: 14, jp: "せみ", romaji: "semi", parts: [{j:"せ",r:"se"}, {j:"み",r:"mi"}], meaning: "蟬 (蟬)" },
+      { id: 15, jp: "そら", romaji: "sora", parts: [{j:"そ",r:"so"}, {j:"ら",r:"ra"}], meaning: "空 (天空)" },
+      { id: 16, jp: "たこ", romaji: "tako", parts: [{j:"た",r:"ta"}, {j:"こ",r:"ko"}], meaning: "章魚 (章魚)" },
+      { id: 17, jp: "ちず", romaji: "chizu", parts: [{j:"ち",r:"chi"}, {j:"ず",r:"zu"}], meaning: "地圖 (地圖)" },
+      { id: 18, jp: "つゆ", romaji: "tsuyu", parts: [{j:"つ",r:"tsu"}, {j:"ゆ",r:"yu"}], meaning: "露 (露水/梅雨)" },
+      { id: 19, jp: "て", romaji: "te", parts: [{j:"て",r:"te"}], meaning: "手 (手)" },
+      { id: 20, jp: "とら", romaji: "tora", parts: [{j:"と",r:"to"}, {j:"ら",r:"ra"}], meaning: "虎 (老虎)" },
+      { id: 21, jp: "なす", romaji: "nasu", parts: [{j:"な",r:"na"}, {j:"す",r:"su"}], meaning: "茄子 (茄子)" },
+      { id: 22, jp: "にく", romaji: "niku", parts: [{j:"に",r:"ni"}, {j:"く",r:"ku"}], meaning: "肉 (肉)" },
+      { id: 23, jp: "いぬ", romaji: "inu", parts: [{j:"い",r:"i"}, {j:"ぬ",r:"nu"}], meaning: "犬 (狗)" },
+      { id: 24, jp: "ねこ", romaji: "neko", parts: [{j:"ね",r:"ne"}, {j:"こ",r:"ko"}], meaning: "貓 (貓)" },
+      { id: 25, jp: "のり", romaji: "nori", parts: [{j:"の",r:"no"}, {j:"り",r:"ri"}], meaning: "海苔 (海苔)" },
+      { id: 26, jp: "はな", romaji: "hana", parts: [{j:"は",r:"ha"}, {j:"な",r:"na"}], meaning: "花、華、鼻 (花/鼻子)" },
+      { id: 27, jp: "ひめ", romaji: "hime", parts: [{j:"ひ",r:"hi"}, {j:"め",r:"me"}], meaning: "姬 (公主)" },
+      { id: 28, jp: "ふぐ", romaji: "fugu", parts: [{j:"ふ",r:"hu"}, {j:"ぐ",r:"gu"}], meaning: "河豚 (河豚)" },
+      { id: 29, jp: "へび", romaji: "hebi", parts: [{j:"へ",r:"he"}, {j:"び",r:"bi"}], meaning: "蛇 (蛇)" },
+      { id: 30, jp: "ほし", romaji: "hoshi", parts: [{j:"ほ",r:"ho"}, {j:"し",r:"shi"}], meaning: "星 (星星)" },
+      { id: 31, jp: "まめ", romaji: "mame", parts: [{j:"ま",r:"ma"}, {j:"め",r:"me"}], meaning: "豆 (豆類)" },
+      { id: 32, jp: "みかん", romaji: "mikan", parts: [{j:"み",r:"mi"}, {j:"か",r:"ka"}, {j:"ん",r:"n"}], meaning: "蜜柑 (橘子)" },
+      { id: 33, jp: "むし", romaji: "mushi", parts: [{j:"む",r:"mu"}, {j:"し",r:"shi"}], meaning: "蟲、蒸 (昆蟲/蒸)" },
+      { id: 34, jp: "めし", romaji: "meshi", parts: [{j:"め",r:"me"}, {j:"し",r:"shi"}], meaning: "飯 (飯)" },
+      { id: 35, jp: "もも", romaji: "momo", parts: [{j:"も",r:"mo"}, {j:"も",r:"mo"}], meaning: "桃 (水蜜桃)" },
+      { id: 36, jp: "やま", romaji: "yama", parts: [{j:"や",r:"ya"}, {j:"ま",r:"ma"}], meaning: "山 (山)" },
+      { id: 37, jp: "ゆき", romaji: "yuki", parts: [{j:"ゆ",r:"yu"}, {j:"き",r:"ki"}], meaning: "雪 (雪)" },
+      { id: 38, jp: "よる", romaji: "yoru", parts: [{j:"よ",r:"yo"}, {j:"る",r:"ru"}], meaning: "夜 (夜晚)" },
+      { id: 39, jp: "いくら", romaji: "ikura", parts: [{j:"い",r:"i"}, {j:"く",r:"ku"}, {j:"ら",r:"ra"}], meaning: "鮭魚卵 (鮭魚卵)" },
+      { id: 40, jp: "りんご", romaji: "ringo", parts: [{j:"り",r:"ri"}, {j:"ん",r:"n"}, {j:"ご",r:"go"}], meaning: "林檎(蘋果)" },
+      { id: 41, jp: "るい", romaji: "rui", parts: [{j:"る",r:"ru"}, {j:"い",r:"i"}], meaning: "壘、淚 (壘/眼淚)" },
+      { id: 42, jp: "れん", romaji: "ren", parts: [{j:"れ",r:"re"}, {j:"ん",r:"n"}], meaning: "蓮、戀 (蓮花/戀愛)" },
+      { id: 43, jp: "ろし", romaji: "roshi", parts: [{j:"ろ",r:"ro"}, {j:"し",r:"shi"}], meaning: "濾紙 (濾紙)" },
+      { id: 44, jp: "わかめ", romaji: "wakame", parts: [{j:"わ",r:"wa"}, {j:"か",r:"ka"}, {j:"め",r:"me"}], meaning: "若布(裙帶菜)" },
+      { id: 45, jp: "ごはんをたべます", romaji: "gohan wo tabemasu", parts: [{j:"ご",r:"go"},{j:"は",r:"ha"},{j:"ん",r:"n"},{j:"を",r:"wo"},{j:"た",r:"ta"},{j:"べ",r:"be"},{j:"ま",r:"ma"},{j:"す",r:"su"}], meaning: "吃飯" },
+      { id: 46, jp: "しんかんせん", romaji: "shinkansen", parts: [{j:"し",r:"si"},{j:"ん",r:"n"},{j:"か",r:"ka"},{j:"ん",r:"n"},{j:"せ",r:"se"},{j:"ん",r:"n"}], meaning: "新幹線" },
+      { id: 47, jp: "あさくさ", romaji: "asakusa", parts: [{j:"あ",r:"a"},{j:"さ",r:"sa"},{j:"く",r:"ku"},{j:"さ",r:"sa"}], meaning: "淺草" },
+      { id: 48, jp: "さくら", romaji: "sakura", parts: [{j:"さ",r:"sa"},{j:"く",r:"ku"},{j:"ら",r:"ra"}], meaning: "櫻 (櫻花)" },
+      { id: 49, jp: "ほっかいどう", romaji: "hokkaidou", parts: [{j:"ほ",r:"ho"},{j:"つ",r:"tsu"},{j:"か",r:"ka"},{j:"い",r:"i"},{j:"ど",r:"do"},{j:"う",r:"u"}], meaning: "北海道" },
+      { id: 50, jp: "おきなわ", romaji: "okinawa", parts: [{j:"お",r:"o"},{j:"き",r:"ki"},{j:"な",r:"na"},{j:"わ",r:"wa"}], meaning: "沖繩" }
+    ];
+
+    /* ================= GLOBAL STATE ================= */
+    let kanaFilter = 'all'; // 'all', 'hira', 'kata'
+    let currentKanaPool = [];
+    let currentKanaIndex = 0;
+    let currentKana = null;
+    let timer = null;
+    let countdownVal = 10;
+    let isPaused = false;
+    let autoNext = false;
+    const FULL_DASH_ARRAY = 565.48;
+
+    // Quiz State
+    let quizData = [];
+    let currentQuizIndex = 0;
+    let quizScore = 0;
+    let currentQuizItem = null;
+
+    /* ================= SPEECH SYNTHESIS (TTS) ================= */
+    function playTTS(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // Stop ongoing
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ja-JP';
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    /* ================= MAIN TAB SWITCHING ================= */
+    function switchMainTab(tab) {
+      const navKana = document.getElementById('nav-kana');
+      const navVocab = document.getElementById('nav-vocab');
+      const kanaSection = document.getElementById('kana-section');
+      const vocabSection = document.getElementById('vocab-section');
+
+      if (tab === 'kana') {
+        kanaSection.classList.remove('hidden');
+        vocabSection.classList.add('hidden');
+        navKana.className = "flex-1 sm:flex-none px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-white text-morandi-800 shadow-sm";
+        navVocab.className = "flex-1 sm:flex-none px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-morandi-600 hover:text-morandi-800";
+        startKanaSession();
+      } else {
+        kanaSection.classList.add('hidden');
+        vocabSection.classList.remove('hidden');
+        navVocab.className = "flex-1 sm:flex-none px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-white text-morandi-800 shadow-sm";
+        navKana.className = "flex-1 sm:flex-none px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-morandi-600 hover:text-morandi-800";
+        clearInterval(timer);
+        renderVocabStudyCards();
+      }
+    }
+
+    /* ================= MODE 1: KANA FLASHCARDS LOGIC ================= */
+    function setKanaFilter(type) {
+      kanaFilter = type;
+      ['all', 'hira', 'kata'].forEach(t => {
+        const btn = document.getElementById(`filter-${t}`);
+        if (t === type) {
+          btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-morandi-500 text-white shadow-xs";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-morandi-100 text-morandi-700 hover:bg-morandi-200";
+        }
+      });
+      startKanaSession();
+    }
+
+    function startKanaSession() {
+      // Build pool based on filter
+      currentKanaPool = KANA_DATA.map(item => {
+        if (kanaFilter === 'hira') {
+          return { kana: item.hira, type: '平假名', romaji: item.romaji, pair: item.kata };
+        } else if (kanaFilter === 'kata') {
+          return { kana: item.kata, type: '片假名', romaji: item.romaji, pair: item.hira };
+        } else {
+          // Randomly choose hiragana or katakana
+          const isHira = Math.random() > 0.5;
+          return {
+            kana: isHira ? item.hira : item.kata,
+            type: isHira ? '平假名' : '片假名',
+            romaji: item.romaji,
+            pair: isHira ? item.kata : item.hira
+          };
+        }
+      });
+
+      // Shuffle pool
+      currentKanaPool.sort(() => Math.random() - 0.5);
+      currentKanaIndex = 0;
+      loadKanaCard();
+    }
+
+    function loadKanaCard() {
+      clearInterval(timer);
+      currentKana = currentKanaPool[currentKanaIndex];
+
+      document.getElementById('kana-char').innerText = currentKana.kana;
+      document.getElementById('kana-type-badge').innerText = currentKana.type;
+      document.getElementById('kana-romaji').innerText = currentKana.romaji;
+      document.getElementById('kana-pair-text').innerText = currentKana.pair;
+
+      // Reset reveal box
+      document.getElementById('reveal-btn').classList.remove('hidden');
+      document.getElementById('answer-content').classList.add('hidden');
+
+      // Reset timer
+      countdownVal = 10;
+      isPaused = false;
+      updateTimerUI();
+
+      timer = setInterval(() => {
+        if (!isPaused) {
+          countdownVal--;
+          updateTimerUI();
+          if (countdownVal <= 0) {
+            revealKanaAnswer();
+            if (autoNext) {
+              setTimeout(() => {
+                nextKana();
+              }, 1500);
+            } else {
+              clearInterval(timer);
+            }
+          }
+        }
+      }, 1000);
+    }
+
+    function updateTimerUI() {
+      document.getElementById('countdown-num').innerText = `${countdownVal} 秒`;
+      const circle = document.getElementById('countdown-circle');
+      const offset = FULL_DASH_ARRAY - (countdownVal / 10) * FULL_DASH_ARRAY;
+      circle.style.strokeDashoffset = offset;
+
+      const pauseIcon = document.getElementById('pause-icon');
+      const pauseText = document.getElementById('pause-text');
+      if (isPaused) {
+        pauseIcon.className = "fa-solid fa-play";
+        pauseText.innerText = "繼續";
+      } else {
+        pauseIcon.className = "fa-solid fa-pause";
+        pauseText.innerText = "暫停";
+      }
+    }
+
+    function revealKanaAnswer() {
+      document.getElementById('reveal-btn').classList.add('hidden');
+      document.getElementById('answer-content').classList.remove('hidden');
+      playTTS(currentKana.kana);
+    }
+
+    function togglePauseTimer() {
+      isPaused = !isPaused;
+      updateTimerUI();
+    }
+
+    function toggleAutoNext() {
+      autoNext = document.getElementById('auto-next-toggle').checked;
+    }
+
+    function nextKana() {
+      currentKanaIndex = (currentKanaIndex + 1) % currentKanaPool.length;
+      loadKanaCard();
+    }
+
+    function prevKana() {
+      currentKanaIndex = (currentKanaIndex - 1 + currentKanaPool.length) % currentKanaPool.length;
+      loadKanaCard();
+    }
+
+    /* ================= MODE 2: VOCABULARY LEARNING & QUIZ ================= */
+    function switchVocabSubTab(subTab) {
+      const subStudy = document.getElementById('subnav-study');
+      const subQuiz = document.getElementById('subnav-quiz');
+      const studyView = document.getElementById('vocab-study-view');
+      const quizView = document.getElementById('vocab-quiz-view');
+
+      if (subTab === 'study') {
+        studyView.classList.remove('hidden');
+        quizView.classList.add('hidden');
+        subStudy.className = "py-3 px-2 border-b-2 border-morandi-500 text-morandi-800 font-bold text-sm flex items-center gap-2";
+        subQuiz.className = "py-3 px-2 border-b-2 border-transparent text-morandi-500 hover:text-morandi-700 font-semibold text-sm flex items-center gap-2";
+      } else {
+        studyView.classList.add('hidden');
+        quizView.classList.remove('hidden');
+        subQuiz.className = "py-3 px-2 border-b-2 border-morandi-500 text-morandi-800 font-bold text-sm flex items-center gap-2";
+        subStudy.className = "py-3 px-2 border-b-2 border-transparent text-morandi-500 hover:text-morandi-700 font-semibold text-sm flex items-center gap-2";
+      }
+    }
+
+    // Render Study Cards
+    function renderVocabStudyCards(data = VOCAB_DATA) {
+      const grid = document.getElementById('vocab-grid');
+      document.getElementById('vocab-count').innerText = data.length;
+
+      grid.innerHTML = data.map(item => {
+        // Construct annotated romaji string like image: 1 あ__(a)か__(ka)/赤・紅
+        const annotatedRomaji = item.parts.map(p => `<span class="inline-block font-jp">${p.j}</span><span class="text-xs text-morandi-400 font-normal ml-0.5 mr-1">(${p.r})</span>`).join('');
+
+        return `
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-morandi-100 hover:shadow-md transition-all flex flex-col justify-between space-y-3">
+            <div class="flex justify-between items-start">
+              <span class="text-xs font-bold text-morandi-400 bg-morandi-50 px-2 py-0.5 rounded-md">No.${item.id}</span>
+              <button onclick="playTTS('${item.jp}')" class="text-morandi-400 hover:text-morandi-600 transition-colors">
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+            </div>
+
+            <div>
+              <div class="text-2xl font-bold font-jp text-morandi-900 leading-tight">
+                ${item.jp}
+              </div>
+              <div class="text-xs text-morandi-500 mt-1 flex flex-wrap items-center">
+                ${annotatedRomaji}
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-morandi-50 flex justify-between items-center text-xs text-morandi-700 font-medium">
+              <span>${item.meaning}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterVocabList() {
+      const query = document.getElementById('vocab-search').value.toLowerCase().trim();
+      const filtered = VOCAB_DATA.filter(item => 
+        item.jp.toLowerCase().includes(query) ||
+        item.romaji.toLowerCase().includes(query) ||
+        item.meaning.toLowerCase().includes(query)
+      );
+      renderVocabStudyCards(filtered);
+    }
+
+    function playAllVocabAudio() {
+      let idx = 0;
+      function next() {
+        if (idx < VOCAB_DATA.length) {
+          playTTS(VOCAB_DATA[idx].jp);
+          idx++;
+          setTimeout(next, 1200);
+        }
+      }
+      next();
+    }
+
+    /* ================= QUIZ ENGINE ================= */
+    function startQuiz() {
+      const type = document.getElementById('quiz-type-select').value;
+      const count = parseInt(document.getElementById('quiz-amount-select').value);
+
+      // Shuffle & Slice
+      quizData = [...VOCAB_DATA].sort(() => Math.random() - 0.5).slice(0, count);
+      currentQuizIndex = 0;
+      quizScore = 0;
+
+      document.getElementById('quiz-start-box').classList.add('hidden');
+      document.getElementById('quiz-play-box').classList.remove('hidden');
+      document.getElementById('quiz-result-box').classList.add('hidden');
+      document.getElementById('quiz-total-count').innerText = quizData.length;
+
+      loadQuizQuestion(type);
+    }
+
+    function loadQuizQuestion(type) {
+      const item = quizData[currentQuizIndex];
+      currentQuizItem = item;
+
+      document.getElementById('quiz-current-idx').innerText = currentQuizIndex + 1;
+      document.getElementById('quiz-score').innerText = quizScore;
+      document.getElementById('quiz-question-num').innerText = `No.${item.id}`;
+      document.getElementById('quiz-question-display').innerText = item.jp;
+      document.getElementById('quiz-feedback').classList.add('hidden');
+
+      // Update progress bar
+      const progressPct = (currentQuizIndex / quizData.length) * 100;
+      document.getElementById('quiz-progress-bar').style.width = `${progressPct}%`;
+
+      const optionsContainer = document.getElementById('quiz-options-container');
+      const fillContainer = document.getElementById('quiz-fill-container');
+
+      if (type === 'mc') {
+        optionsContainer.classList.remove('hidden');
+        fillContainer.classList.add('hidden');
+
+        // Generate 4 options
+        const wrongOptions = VOCAB_DATA.filter(v => v.id !== item.id).sort(() => Math.random() - 0.5).slice(0, 3);
+        const options = [...wrongOptions, item].sort(() => Math.random() - 0.5);
+
+        optionsContainer.innerHTML = options.map(opt => `
+          <button onclick="checkMCOption(this, '${opt.id}')" class="w-full text-left px-5 py-3.5 rounded-xl border border-morandi-200 hover:border-morandi-400 hover:bg-morandi-50 font-medium text-morandi-800 text-sm transition-all">
+            ${opt.meaning}
+          </button>
+        `).join('');
+
+      } else {
+        optionsContainer.classList.add('hidden');
+        fillContainer.classList.remove('hidden');
+        const input = document.getElementById('quiz-fill-input');
+        input.value = '';
+        input.focus();
+
+        // Build hint with underscores like the reference sheet
+        const hintText = item.parts.map(p => `${p.j}___`).join(' ');
+        document.getElementById('quiz-fill-hint').innerText = `填空提示: ${hintText}`;
+      }
+    }
+
+    function checkMCOption(btn, selectedId) {
+      const isCorrect = parseInt(selectedId) === currentQuizItem.id;
+      const feedback = document.getElementById('quiz-feedback');
+      
+      // Disable all option buttons
+      const buttons = document.querySelectorAll('#quiz-options-container button');
+      buttons.forEach(b => b.disabled = true);
+
+      if (isCorrect) {
+        btn.classList.add('bg-emerald-100', 'border-emerald-400', 'text-emerald-900');
+        feedback.innerText = "正確！太厲害了！";
+        feedback.className = "text-sm font-bold p-3 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 mt-4";
+        quizScore += 10;
+      } else {
+        btn.classList.add('bg-rose-100', 'border-rose-400', 'text-rose-900');
+        feedback.innerText = `答錯了！正確答案是：${currentQuizItem.meaning}`;
+        feedback.className = "text-sm font-bold p-3 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 mt-4";
+      }
+
+      feedback.classList.remove('hidden');
+      playTTS(currentQuizItem.jp);
+
+      setTimeout(nextQuizQuestion, 1500);
+    }
+
+    function submitFillAnswer() {
+      const userAns = document.getElementById('quiz-fill-input').value.trim().toLowerCase();
+      const feedback = document.getElementById('quiz-feedback');
+      const isCorrect = userAns === currentQuizItem.romaji.toLowerCase();
+
+      if (isCorrect) {
+        feedback.innerText = "答案正確！";
+        feedback.className = "text-sm font-bold p-3 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 mt-4";
+        quizScore += 10;
+      } else {
+        feedback.innerText = `答錯了！正確羅馬拼音為：${currentQuizItem.romaji}`;
+        feedback.className = "text-sm font-bold p-3 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 mt-4";
+      }
+
+      feedback.classList.remove('hidden');
+      playTTS(currentQuizItem.jp);
+
+      setTimeout(nextQuizQuestion, 1500);
+    }
+
+    function nextQuizQuestion() {
+      currentQuizIndex++;
+      if (currentQuizIndex < quizData.length) {
+        const type = document.getElementById('quiz-type-select').value;
+        loadQuizQuestion(type);
+      } else {
+        showQuizResults();
+      }
+    }
+
+    function showQuizResults() {
+      document.getElementById('quiz-play-box').classList.add('hidden');
+      document.getElementById('quiz-result-box').classList.remove('hidden');
+
+      const total = quizData.length;
+      const correctCount = quizScore / 10;
+      const pct = Math.round((correctCount / total) * 100);
+
+      document.getElementById('result-score').innerText = `${pct}%`;
+      document.getElementById('result-correct-count').innerText = `${correctCount} / ${total}`;
+    }
+
+    function quitQuiz() {
+      resetQuizView();
+    }
+
+    function resetQuizView() {
+      document.getElementById('quiz-start-box').classList.remove('hidden');
+      document.getElementById('quiz-play-box').classList.add('hidden');
+      document.getElementById('quiz-result-box').classList.add('hidden');
+    }
+
+    function playQuizAudio() {
+      if (currentQuizItem) {
+        playTTS(currentQuizItem.jp);
+      }
+    }
+
+    /* ================= INITIALIZATION ================= */
+    window.onload = function() {
+      startKanaSession();
+    };
+  </script>
+</body>
+</html>
