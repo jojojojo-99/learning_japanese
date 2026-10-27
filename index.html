@@ -141,7 +141,7 @@
             <i class="fa-solid fa-volume-high text-xl"></i>
           </button>
 
-          <!-- 羅馬拼音答案 (預設隱藏或等時間到) -->
+          <!-- 羅馬拼音答案 -->
           <div id="romaji-display" class="mt-2 h-10 flex items-center justify-center">
             <span class="text-2xl font-semibold text-accent-rose opacity-0 transition-opacity duration-300" id="romaji-text">a</span>
           </div>
@@ -195,7 +195,10 @@
       <div id="vocab-quiz-view" class="hidden max-w-2xl mx-auto bg-white rounded-2xl p-6 md:p-8 card-shadow border border-morandi-100">
         <div class="flex justify-between items-center mb-4">
           <span class="text-xs font-bold uppercase tracking-wider text-morandi-500 bg-morandi-100 px-3 py-1 rounded-full" id="quiz-count-label">第 1 / 10 題</span>
-          <span class="text-sm font-semibold text-accent-rose" id="quiz-score-label">得分: 0</span>
+          <div class="flex items-center space-x-3">
+            <span class="text-sm font-semibold text-accent-rose" id="quiz-score-label">得分: 0</span>
+            <button onclick="startVocabQuiz()" class="text-xs text-morandi-500 hover:text-morandi-700 font-bold underline">重新出題</button>
+          </div>
         </div>
 
         <!-- 題目展示 -->
@@ -224,11 +227,16 @@
     <!-- TAB 3: 模擬考試 (大題 I, II, III, IV) -->
     <section id="sec-exam" class="tab-content hidden">
       <div class="bg-white rounded-2xl p-6 md:p-8 card-shadow border border-morandi-100">
-        <div class="border-b border-morandi-200 pb-4 mb-6">
-          <h2 class="text-2xl font-bold text-morandi-800 flex items-center">
-            <i class="fa-solid fa-file-signature text-morandi-500 mr-2"></i>日語課程期末綜合模擬考
-          </h2>
-          <p class="text-sm text-morandi-600 mt-1">涵蓋清音50音表、P15講義1~50語彙、P28發音相近詞彙與特定講義題型</p>
+        <div class="border-b border-morandi-200 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold text-morandi-800 flex items-center">
+              <i class="fa-solid fa-file-signature text-morandi-500 mr-2"></i>日語課程期末綜合模擬考
+            </h2>
+            <p class="text-sm text-morandi-600 mt-1">涵蓋清音50音表、P15講義1~50語彙、P28發音相近詞彙與特定講義題型</p>
+          </div>
+          <button onclick="resetAllExamParts()" class="px-4 py-2 bg-morandi-100 text-morandi-700 hover:bg-morandi-200 text-sm font-bold rounded-xl transition flex items-center">
+            <i class="fa-solid fa-rotate mr-1.5"></i>全部重新隨機出題
+          </button>
         </div>
 
         <!-- 大題選擇頁籤 -->
@@ -246,9 +254,14 @@
 
         <!-- 大題 I: 清音50音填空表 -->
         <div id="exam-part-1" class="exam-part">
-          <div class="bg-morandi-50 p-4 rounded-xl mb-4 border border-morandi-200">
-            <h3 class="font-bold text-morandi-800 mb-1">Ⅰ 使用平仮名填空 清音５０音表</h3>
-            <p class="text-xs text-morandi-600">請在挖空的格子內填入正確的假名，填寫完畢後點擊「對答案」。</p>
+          <div class="bg-morandi-50 p-4 rounded-xl mb-4 border border-morandi-200 flex justify-between items-center">
+            <div>
+              <h3 class="font-bold text-morandi-800 mb-1">Ⅰ 使用平仮名填空 清音５０音表</h3>
+              <p class="text-xs text-morandi-600">每次點擊重新出題會隨機變換挖空格子。</p>
+            </div>
+            <button onclick="renderExamPart1Table()" class="px-3 py-1.5 bg-morandi-200 hover:bg-morandi-300 text-morandi-800 text-xs font-bold rounded-lg transition">
+              重新隨機挖空
+            </button>
           </div>
 
           <div class="overflow-x-auto mb-6">
@@ -278,20 +291,19 @@
             <button onclick="checkPart1Answers()" class="px-6 py-2.5 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition">
               對答案
             </button>
-            <button onclick="resetPart1()" class="px-4 py-2.5 border border-morandi-300 text-morandi-700 font-medium rounded-xl hover:bg-morandi-100 transition">
-              重新測驗
-            </button>
           </div>
         </div>
 
         <!-- 大題 II: 聽解數字選擇題 -->
         <div id="exam-part-2" class="exam-part hidden">
-          <div class="bg-morandi-50 p-4 rounded-xl mb-6 border border-morandi-200">
-            <h3 class="font-bold text-morandi-800 mb-1">Ⅱ 聽解從選項找正確解答 (請使用數字寫)</h3>
-            <p class="text-xs text-morandi-600 mb-2">請點擊語音圖示聆聽單字發音，對照題目給予的數字中文選項，在輸入框中寫入**數字 (例如: 1, 2, 3...)**！</p>
-            <div class="text-xs bg-white p-2 rounded border border-morandi-200 text-morandi-700">
-              <strong>EX範例：</strong>教師唸 “げんじゅうみん” 答案填 <code>1</code>；唸 “れんあい” 答案填 <code>3</code>。
+          <div class="bg-morandi-50 p-4 rounded-xl mb-6 border border-morandi-200 flex justify-between items-center">
+            <div>
+              <h3 class="font-bold text-morandi-800 mb-1">Ⅱ 聽解從選項找正確解答 (請使用數字寫)</h3>
+              <p class="text-xs text-morandi-600">每次重新出題會隨機抽取 5 個題目並打散選項順序。</p>
             </div>
+            <button onclick="renderExamPart2Questions()" class="px-3 py-1.5 bg-morandi-200 hover:bg-morandi-300 text-morandi-800 text-xs font-bold rounded-lg transition">
+              重新隨機出題
+            </button>
           </div>
 
           <div id="part2-questions-container" class="space-y-6">
@@ -307,10 +319,14 @@
 
         <!-- 大題 III & IV: 聽寫與錯字改正拼音填空 -->
         <div id="exam-part-3" class="exam-part hidden">
-          <div class="bg-morandi-50 p-4 rounded-xl mb-6 border border-morandi-200">
-            <h3 class="font-bold text-morandi-800 mb-1">Ⅲ、Ⅳ 語彙聽寫與錯字改正 (請全部用平假名寫)</h3>
-            <p class="text-xs text-morandi-600 mb-1">聽語音或根據提示，將正確的**全平假名**填入框中。若選項內有錯誤請自行改正後填寫！</p>
-            <p class="text-xs text-accent-rose font-medium">注意：找不到選項時，請直接聽寫或默寫！</p>
+          <div class="bg-morandi-50 p-4 rounded-xl mb-6 border border-morandi-200 flex justify-between items-center">
+            <div>
+              <h3 class="font-bold text-morandi-800 mb-1">Ⅲ、Ⅳ 語彙聽寫與錯字改正 (請全部用平假名寫)</h3>
+              <p class="text-xs text-morandi-600">每次點擊會從題庫中隨機抽取 5 題進行測驗。</p>
+            </div>
+            <button onclick="renderExamPart3Questions()" class="px-3 py-1.5 bg-morandi-200 hover:bg-morandi-300 text-morandi-800 text-xs font-bold rounded-lg transition">
+              重新隨機出題
+            </button>
           </div>
 
           <div id="part3-questions-container" class="space-y-4">
@@ -353,10 +369,10 @@
           <!-- 動態繪製錯題 -->
         </div>
 
-        <!-- 錯題特訓測驗區 (預設隱藏) -->
+        <!-- 錯題特訓測驗區 -->
         <div id="error-review-quiz-container" class="hidden max-w-xl mx-auto bg-morandi-50 border border-morandi-200 rounded-2xl p-6 mt-6">
           <div class="flex justify-between items-center mb-4">
-            <span class="text-xs font-bold text-morandi-500 bg-white px-3 py-1 rounded-full border border-morandi-200">錯題強化測驗</span>
+            <span class="text-xs font-bold text-morandi-500 bg-white px-3 py-1 rounded-full border border-morandi-200">錯題隨機特訓</span>
             <button onclick="cancelErrorReview()" class="text-xs text-morandi-500 hover:text-morandi-800 font-medium">關閉測驗</button>
           </div>
 
@@ -406,7 +422,6 @@
       { h: 'ん', k: 'ン', r: 'n' }
     ];
 
-    // 1~50 講義 P15 單字資料庫
     const VOCAB_P15 = [
       { id: 1,  kana: 'あか', romaji: 'aka', meaning: '赤・紅 (紅色)', category: 'p15' },
       { id: 2,  kana: 'いか', romaji: 'ika', meaning: '烏賊 (魷魚/烏賊)', category: 'p15' },
@@ -460,7 +475,6 @@
       { id: 50, kana: 'おきなわ', romaji: 'okinawa', meaning: '沖縄 (沖繩)', category: 'p15' }
     ];
 
-    // P28 音近中文語彙庫
     const VOCAB_P28 = [
       { id: 101, kana: 'げんじゅうみん', romaji: 'genjuumin', meaning: '原住民', category: 'p28' },
       { id: 102, kana: 'かれん', romaji: 'karen', meaning: '花蓮', category: 'p28' },
@@ -499,21 +513,51 @@
 
     const ALL_VOCAB = [...VOCAB_P15, ...VOCAB_P28];
 
+    // 大題 II 完整題庫池 (每次隨機抽5題)
+    const MASTER_PART2_POOL = [
+      { kana: 'げんじゅうみん', correct: '原住民', wordObj: VOCAB_P28[0] },
+      { kana: 'れんあい', correct: '戀愛', wordObj: VOCAB_P28[17] },
+      { kana: 'しょてん', correct: '書店', wordObj: VOCAB_P28[29] },
+      { kana: 'あか', correct: '紅色', wordObj: VOCAB_P15[0] },
+      { kana: 'おでん', correct: '關東煮/黑輪', wordObj: VOCAB_P28[10] },
+      { kana: 'ふじさん', correct: '富士山', wordObj: VOCAB_P28[2] },
+      { kana: 'でんわ', correct: '電話', wordObj: VOCAB_P28[3] },
+      { kana: 'としょかん', correct: '圖書館', wordObj: VOCAB_P28[12] },
+      { kana: 'そうとうふ', correct: '總統府', wordObj: VOCAB_P28[13] },
+      { kana: 'まんが', correct: '漫畫', wordObj: VOCAB_P28[24] },
+      { kana: 'うどん', correct: '烏龍麵', wordObj: VOCAB_P28[9] },
+      { kana: 'さくら', correct: '櫻花', wordObj: VOCAB_P15[47] }
+    ];
+
+    // 大題 III/IV 完整題庫池 (每次隨機抽5題)
+    const MASTER_PART3_POOL = [
+      { prompt: '淡水 (請寫出平假名)', correctKana: 'たんすい', wordObj: VOCAB_P28[31] },
+      { prompt: '感動 (錯字改正題：×かんど -> 請填正確平假名)', correctKana: 'かんどう', wordObj: VOCAB_P28[23] },
+      { prompt: '優秀 (請寫出平假名)', correctKana: 'ゆうしゅう', wordObj: VOCAB_P28[32] },
+      { prompt: '沖繩 (請寫出平假名)', correctKana: 'おきなわ', wordObj: VOCAB_P15[49] },
+      { prompt: '花蓮 (請寫出平假名)', correctKana: 'かれん', wordObj: VOCAB_P28[1] },
+      { prompt: '富士山 (請寫出平假名)', correctKana: 'ふじさん', wordObj: VOCAB_P28[2] },
+      { prompt: '電話 (請寫出平假名)', correctKana: 'でんわ', wordObj: VOCAB_P28[3] },
+      { prompt: '新幹線 (請寫出平假名)', correctKana: 'しんかんせん', wordObj: VOCAB_P15[45] },
+      { prompt: '北海道 (請寫出平假名)', correctKana: 'hokkaidou', correctKanaAlt: 'ほっかいどう', wordObj: VOCAB_P15[48] }
+    ];
+
+    let currentPart2Questions = [];
+    let currentPart3Questions = [];
+
     /* =========================================================
        2. GLOBAL STATE & LOCAL STORAGE
        ========================================================= */
-    let currentKanaIndex = 0;
     let kanaTimer = null;
     let kanaTimeLeft = 10;
     let kanaTimerDuration = 10;
 
-    let vocabSubMode = 'learn'; // 'learn' | 'quiz'
+    let vocabSubMode = 'learn';
     let currentVocabFilter = 'all';
     let quizCurrentList = [];
     let quizIndex = 0;
     let quizScore = 0;
 
-    // LocalStorage for Error Log
     let errorLog = JSON.parse(localStorage.getItem('jp_error_log') || '[]');
 
     /* =========================================================
@@ -549,7 +593,6 @@
       return valid.map(k => {
         if(type === 'hiragana') return { char: k.h, romaji: k.r };
         if(type === 'katakana') return { char: k.k, romaji: k.r };
-        // both
         return Math.random() > 0.5 ? { char: k.h, romaji: k.r } : { char: k.k, romaji: k.r };
       });
     }
@@ -668,25 +711,48 @@
       });
     }
 
-    // 單字測驗邏輯
+    // 單字測驗 (隨機出題)
     function startVocabQuiz() {
       const pool = getFilteredVocab();
       quizCurrentList = [...pool].sort(() => 0.5 - Math.random()).slice(0, 10);
       quizIndex = 0;
       quizScore = 0;
+      // 確保切換回正常測驗視圖
+      document.getElementById('vocab-quiz-view').innerHTML = `
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-xs font-bold uppercase tracking-wider text-morandi-500 bg-morandi-100 px-3 py-1 rounded-full" id="quiz-count-label">第 1 / 10 題</span>
+          <div class="flex items-center space-x-3">
+            <span class="text-sm font-semibold text-accent-rose" id="quiz-score-label">得分: 0</span>
+            <button onclick="startVocabQuiz()" class="text-xs text-morandi-500 hover:text-morandi-700 font-bold underline">重新出題</button>
+          </div>
+        </div>
+
+        <div class="bg-morandi-50 border border-morandi-200 rounded-xl p-6 text-center mb-6">
+          <div class="text-sm text-morandi-500 font-medium mb-1" id="quiz-prompt">請選擇正確的日文拼音</div>
+          <div class="text-3xl font-bold text-morandi-800 mb-2" id="quiz-question-main">赤・紅</div>
+          <button onclick="playQuizQuestionAudio()" class="text-morandi-500 hover:text-morandi-700 text-lg">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6" id="quiz-options-container"></div>
+        <div id="quiz-feedback" class="hidden p-4 rounded-xl text-center font-medium mb-4"></div>
+        <button id="btn-next-vocab-quiz" onclick="nextVocabQuizQuestion()" class="hidden w-full py-3 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition">
+          下一題
+        </button>
+      `;
       renderQuizQuestion();
     }
 
     function renderQuizQuestion() {
       if(quizIndex >= quizCurrentList.length) {
-        // 測驗結束
         document.getElementById('vocab-quiz-view').innerHTML = `
           <div class="text-center py-8">
             <i class="fa-solid fa-trophy text-5xl text-accent-amber mb-4"></i>
             <h3 class="text-2xl font-bold text-morandi-800 mb-2">單字測驗完成！</h3>
             <p class="text-lg text-morandi-600 mb-6">您的得分：<span class="font-bold text-accent-rose">${quizScore}</span> / ${quizCurrentList.length * 10}</p>
             <button onclick="startVocabQuiz()" class="px-6 py-2.5 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition">
-              再測一次
+              再次隨機出題
             </button>
           </div>
         `;
@@ -700,7 +766,7 @@
       document.getElementById('quiz-feedback').classList.add('hidden');
       document.getElementById('btn-next-vocab-quiz').classList.add('hidden');
 
-      // 建立選項
+      // 隨機產生選項
       const options = [q];
       while(options.length < 4) {
         const randItem = ALL_VOCAB[Math.floor(Math.random() * ALL_VOCAB.length)];
@@ -730,7 +796,6 @@
         feedback.className = 'p-4 rounded-xl text-center font-medium mb-4 bg-emerald-100 text-emerald-800 border border-emerald-300';
         feedback.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i>答對了！ ${correct.kana} (${correct.romaji})`;
       } else {
-        // 紀錄錯題
         addErrorLog(correct);
         feedback.className = 'p-4 rounded-xl text-center font-medium mb-4 bg-rose-100 text-rose-800 border border-rose-300';
         feedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-2"></i>答錯了！正確答案是：<strong>${correct.kana}</strong> (${correct.romaji})`;
@@ -739,7 +804,6 @@
       document.getElementById('quiz-score-label').innerText = `得分: ${quizScore}`;
       document.getElementById('btn-next-vocab-quiz').classList.remove('hidden');
 
-      // 禁用所有按鈕
       const btns = document.querySelectorAll('#quiz-options-container button');
       btns.forEach(b => b.disabled = true);
     }
@@ -755,7 +819,7 @@
     }
 
     /* =========================================================
-       6. TAB 3: 模擬考試 (大題 I, II, III, IV)
+       6. TAB 3: 模擬考試 (大題 I, II, III, IV) 隨機出題
        ========================================================= */
     function switchExamPart(partNum) {
       document.querySelectorAll('.exam-part').forEach(el => el.classList.add('hidden'));
@@ -777,7 +841,14 @@
       renderExamPart3Questions();
     }
 
-    // 大題 I: 清音表
+    function resetAllExamParts() {
+      renderExamPart1Table();
+      renderExamPart2Questions();
+      renderExamPart3Questions();
+      alert('所有模擬考試題庫已重新隨機出題！');
+    }
+
+    // 大題 I: 清音表 (隨機挖空)
     function renderExamPart1Table() {
       const tbody = document.getElementById('kana-table-body');
       tbody.innerHTML = '';
@@ -796,8 +867,8 @@
           if(!item || item.h === '') {
             rowHtml += `<td class="py-2 border border-morandi-200 bg-gray-100"></td>`;
           } else {
-            // 隨機挖空 35% 題目
-            const isBlank = (idx % 3 === 0 || idx % 7 === 1);
+            // 完全隨機挖空約 35%
+            const isBlank = Math.random() < 0.35;
             if(isBlank) {
               rowHtml += `
                 <td class="p-1 border border-morandi-200">
@@ -830,24 +901,32 @@
       alert(`五十音測驗對答案完成！得分：${correct} / ${inputs.length}`);
     }
 
-    function resetPart1() {
-      renderExamPart1Table();
-    }
-
-    // 大題 II: 聽解數字選擇題 (範例題目)
-    const PART2_DATA = [
-      { id: 1, kana: 'げんじゅうみん', options: ['1. 原住民', '2. 書店', '3. 戀愛', '4. 紅色', '5. 裙帶菜'], correctNum: '1', wordObj: VOCAB_P28[0] },
-      { id: 2, kana: 'れんあい', options: ['1. 原住民', '2. 書店', '3. 戀愛', '4. 紅色', '5. 裙帶菜'], correctNum: '3', wordObj: VOCAB_P28[17] },
-      { id: 3, kana: 'しょてん', options: ['1. 富士山', '2. 書店', '3. 官材板', '4. 誠品', '5. 淡水'], correctNum: '2', wordObj: VOCAB_P28[29] },
-      { id: 4, kana: 'あか', options: ['1. 淺草', '2. 北海道', '3. 花蓮', '4. 紅色', '5. 肉'], correctNum: '4', wordObj: VOCAB_P15[0] },
-      { id: 5, kana: 'おでん', options: ['1. 關東煮/黑輪', '2. 烏龍麵', '3. 料理', '4. 麻婆豆腐', '5. 櫻花'], correctNum: '1', wordObj: VOCAB_P28[10] }
-    ];
-
+    // 大題 II: 聽解數字選擇題 (隨機抽 5 題並打散選項順序)
     function renderExamPart2Questions() {
       const container = document.getElementById('part2-questions-container');
       container.innerHTML = '';
 
-      PART2_DATA.forEach((q, idx) => {
+      // 從完整題庫隨機抽 5 題
+      const shuffledPool = [...MASTER_PART2_POOL].sort(() => 0.5 - Math.random());
+      currentPart2Questions = shuffledPool.slice(0, 5);
+
+      // 所有可能的干擾選項庫
+      const allMeanings = MASTER_PART2_POOL.map(p => p.correct);
+
+      currentPart2Questions.forEach((q, idx) => {
+        // 隨機挑選 3 個其他錯誤選項 + 1個正確答案
+        let opts = [q.correct];
+        while(opts.length < 5) {
+          const randMeaning = allMeanings[Math.floor(Math.random() * allMeanings.length)];
+          if(!opts.includes(randMeaning)) {
+            opts.push(randMeaning);
+          }
+        }
+        // 打散選項順序
+        opts.sort(() => 0.5 - Math.random());
+        q.shuffledOptions = opts;
+        q.correctNum = (opts.indexOf(q.correct) + 1).toString();
+
         const div = document.createElement('div');
         div.className = 'p-5 bg-white rounded-xl border border-morandi-200 card-shadow';
         div.innerHTML = `
@@ -860,22 +939,22 @@
             </div>
             <div class="flex items-center space-x-2">
               <label class="text-sm font-medium text-morandi-700">請填數字答案：</label>
-              <input type="text" id="p2-ans-${q.id}" class="w-16 px-3 py-1 text-center border border-morandi-300 rounded-lg font-bold text-morandi-800 focus:outline-none focus:border-morandi-500" placeholder="1-5">
+              <input type="text" id="p2-ans-${idx}" class="w-16 px-3 py-1 text-center border border-morandi-300 rounded-lg font-bold text-morandi-800 focus:outline-none focus:border-morandi-500" placeholder="1-5">
             </div>
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-medium text-morandi-600 bg-morandi-50 p-3 rounded-lg border border-morandi-100">
-            ${q.options.map(opt => `<div>${opt}</div>`).join('')}
+            ${q.shuffledOptions.map((opt, oIdx) => `<div>${oIdx+1}. ${opt}</div>`).join('')}
           </div>
-          <div id="p2-feedback-${q.id}" class="mt-2 text-xs font-bold hidden"></div>
+          <div id="p2-feedback-${idx}" class="mt-2 text-xs font-bold hidden"></div>
         `;
         container.appendChild(div);
       });
     }
 
     function checkPart2Answers() {
-      PART2_DATA.forEach(q => {
-        const input = document.getElementById(`p2-ans-${q.id}`);
-        const feedback = document.getElementById(`p2-feedback-${q.id}`);
+      currentPart2Questions.forEach((q, idx) => {
+        const input = document.getElementById(`p2-ans-${idx}`);
+        const feedback = document.getElementById(`p2-feedback-${idx}`);
         feedback.classList.remove('hidden');
 
         if(input.value.trim() === q.correctNum) {
@@ -883,26 +962,21 @@
           feedback.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i>正確！';
         } else {
           feedback.className = 'mt-2 text-xs font-bold text-rose-600';
-          feedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i>錯誤，正確數字為: ${q.correctNum} (${q.kana})`;
+          feedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i>錯誤，正確選項數字為: ${q.correctNum} (${q.correct})`;
           addErrorLog(q.wordObj);
         }
       });
     }
 
-    // 大題 III & IV: 聽寫與錯字改正
-    const PART3_DATA = [
-      { id: 1, prompt: '淡水 (請寫出平假名)', correctKana: 'たんすい', wordObj: VOCAB_P28[31] },
-      { id: 2, prompt: '感動 (錯字改正題：×かんど -> 請填正確平假名)', correctKana: 'かんどう', wordObj: VOCAB_P28[23] },
-      { id: 3, prompt: '優秀 (請寫出平假名)', correctKana: 'ゆうしゅう', wordObj: VOCAB_P28[32] },
-      { id: 4, prompt: '沖繩 (請寫出平假名)', correctKana: 'おきなわ', wordObj: VOCAB_P15[49] },
-      { id: 5, prompt: '花蓮 (請寫出平假名)', correctKana: 'かれん', wordObj: VOCAB_P28[1] }
-    ];
-
+    // 大題 III & IV: 聽寫與錯字改正 (隨機抽 5 題)
     function renderExamPart3Questions() {
       const container = document.getElementById('part3-questions-container');
       container.innerHTML = '';
 
-      PART3_DATA.forEach((q, idx) => {
+      const shuffledPool = [...MASTER_PART3_POOL].sort(() => 0.5 - Math.random());
+      currentPart3Questions = shuffledPool.slice(0, 5);
+
+      currentPart3Questions.forEach((q, idx) => {
         const div = document.createElement('div');
         div.className = 'p-4 bg-white rounded-xl border border-morandi-200 card-shadow flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3';
         div.innerHTML = `
@@ -915,8 +989,8 @@
             </div>
           </div>
           <div class="w-full sm:w-auto flex items-center space-x-2">
-            <input type="text" id="p3-ans-${q.id}" placeholder="全平假名..." class="w-full sm:w-48 px-3 py-1.5 border border-morandi-300 rounded-lg font-bold text-morandi-800 text-sm focus:outline-none focus:border-morandi-500">
-            <span id="p3-feedback-${q.id}" class="text-xs font-bold hidden whitespace-nowrap"></span>
+            <input type="text" id="p3-ans-${idx}" placeholder="全平假名..." class="w-full sm:w-48 px-3 py-1.5 border border-morandi-300 rounded-lg font-bold text-morandi-800 text-sm focus:outline-none focus:border-morandi-500">
+            <span id="p3-feedback-${idx}" class="text-xs font-bold hidden whitespace-nowrap"></span>
           </div>
         `;
         container.appendChild(div);
@@ -924,12 +998,13 @@
     }
 
     function checkPart3Answers() {
-      PART3_DATA.forEach(q => {
-        const input = document.getElementById(`p3-ans-${q.id}`);
-        const feedback = document.getElementById(`p3-feedback-${q.id}`);
+      currentPart3Questions.forEach((q, idx) => {
+        const input = document.getElementById(`p3-ans-${idx}`);
+        const feedback = document.getElementById(`p3-feedback-${idx}`);
         feedback.classList.remove('hidden');
 
-        if(input.value.trim() === q.correctKana) {
+        const userVal = input.value.trim();
+        if(userVal === q.correctKana || (q.correctKanaAlt && userVal === q.correctKanaAlt)) {
           feedback.className = 'text-xs font-bold text-emerald-600 whitespace-nowrap';
           feedback.innerHTML = '<i class="fa-solid fa-check"></i> 正確';
         } else {
@@ -941,7 +1016,7 @@
     }
 
     /* =========================================================
-       7. TAB 4: 錯題本與強化特訓 (Local Storage)
+       7. TAB 4: 錯題本與強化特訓
        ========================================================= */
     function addErrorLog(wordObj) {
       if(!wordObj || !wordObj.kana) return;
@@ -1016,7 +1091,7 @@
                 <i class="fa-solid fa-volume-high text-xs"></i>
               </button>
             </div>
-            <div class="text-xs text-morandi-500 font-mono mb-2">${v.romaji}</div>
+            <div class="text-xs text-morandi-500 font-mono mb-2">${v.romaji || ''}</div>
             <div class="text-sm font-medium text-morandi-700 border-t border-morandi-100 pt-2">
               ${v.meaning}
             </div>
@@ -1031,7 +1106,6 @@
       });
     }
 
-    // 錯題特訓模式
     let currentReviewItem = null;
 
     function startErrorReviewQuiz() {
@@ -1045,6 +1119,7 @@
     }
 
     function nextReviewQuestion() {
+      // 隨機從錯題本中抽一題
       currentReviewItem = errorLog[Math.floor(Math.random() * errorLog.length)];
       document.getElementById('review-q-prompt').innerText = currentReviewItem.meaning;
       document.getElementById('review-user-input').value = '';
@@ -1060,7 +1135,7 @@
       const feedback = document.getElementById('review-feedback');
       feedback.classList.remove('hidden');
 
-      if(input === currentReviewItem.kana || input.toLowerCase() === currentReviewItem.romaji.toLowerCase()) {
+      if(input === currentReviewItem.kana || (currentReviewItem.romaji && input.toLowerCase() === currentReviewItem.romaji.toLowerCase())) {
         feedback.className = 'mt-4 text-center text-sm font-semibold text-emerald-600 bg-emerald-50 p-2 rounded-lg';
         feedback.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i>太棒了，答對了！';
         setTimeout(() => {
@@ -1068,7 +1143,7 @@
         }, 1200);
       } else {
         feedback.className = 'mt-4 text-center text-sm font-semibold text-rose-600 bg-rose-50 p-2 rounded-lg';
-        feedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i>再試試看！解答是：${currentReviewItem.kana} (${currentReviewItem.romaji})`;
+        feedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i>再試試看！解答是：${currentReviewItem.kana}`;
       }
     }
 
@@ -1080,10 +1155,10 @@
         alert('您的瀏覽器不支援語音合成功能！');
         return;
       }
-      window.speechSynthesis.cancel(); // 停止先前的發音
+      window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'ja-JP';
-      utterance.rate = 0.85; // 稍微放慢速度適合學習
+      utterance.rate = 0.85;
       window.speechSynthesis.speak(utterance);
     }
   </script>
