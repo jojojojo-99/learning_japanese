@@ -131,7 +131,6 @@
 
         <!-- 卡片區域 -->
         <div class="bg-morandi-50 border-2 border-morandi-200 rounded-2xl p-8 my-4 relative min-h-[220px] flex flex-col justify-center items-center overflow-hidden">
-          <!-- 倒數進度條 -->
           <div class="absolute top-0 left-0 right-0 h-2 bg-morandi-200">
             <div id="kana-progress" class="h-full bg-morandi-500 progress-bar-fill" style="width: 100%;"></div>
           </div>
@@ -141,7 +140,6 @@
             <i class="fa-solid fa-volume-high text-xl"></i>
           </button>
 
-          <!-- 羅馬拼音答案 -->
           <div id="romaji-display" class="mt-2 h-10 flex items-center justify-center">
             <span class="text-2xl font-semibold text-accent-rose opacity-0 transition-opacity duration-300" id="romaji-text">a</span>
           </div>
@@ -161,7 +159,6 @@
 
     <!-- TAB 2: 單字學習與測驗 -->
     <section id="sec-vocab" class="tab-content hidden">
-      <!-- 模式選單與篩選器 -->
       <div class="bg-white rounded-2xl p-5 card-shadow border border-morandi-100 mb-6">
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div class="flex space-x-2 border-b sm:border-b-0 pb-2 sm:pb-0 w-full sm:w-auto overflow-x-auto">
@@ -173,7 +170,6 @@
             </button>
           </div>
 
-          <!-- 分類篩選 -->
           <div class="flex items-center space-x-2 w-full sm:w-auto">
             <label for="vocab-category" class="text-sm font-medium text-morandi-700 whitespace-nowrap">單字範圍：</label>
             <select id="vocab-category" onchange="filterVocabList()" class="w-full sm:w-auto bg-morandi-50 border border-morandi-200 rounded-lg px-3 py-1.5 text-sm text-morandi-800 focus:outline-none focus:border-morandi-500">
@@ -187,9 +183,7 @@
       </div>
 
       <!-- 子頁面：單字學習卡 -->
-      <div id="vocab-learn-view" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        <!-- 由 JavaScript 動態繪製單字卡片 -->
-      </div>
+      <div id="vocab-learn-view" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
 
       <!-- 子頁面：單字互動測驗 -->
       <div id="vocab-quiz-view" class="hidden max-w-2xl mx-auto bg-white rounded-2xl p-6 md:p-8 card-shadow border border-morandi-100">
@@ -201,7 +195,6 @@
           </div>
         </div>
 
-        <!-- 題目展示 -->
         <div class="bg-morandi-50 border border-morandi-200 rounded-xl p-6 text-center mb-6">
           <div class="text-sm text-morandi-500 font-medium mb-1" id="quiz-prompt">請選擇正確的日文拼音</div>
           <div class="text-3xl font-bold text-morandi-800 mb-2" id="quiz-question-main">赤・紅</div>
@@ -210,12 +203,7 @@
           </button>
         </div>
 
-        <!-- 選項按鈕 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6" id="quiz-options-container">
-          <!-- 動態產生 4 個選項按鈕 -->
-        </div>
-
-        <!-- 回饋結果提示 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6" id="quiz-options-container"></div>
         <div id="quiz-feedback" class="hidden p-4 rounded-xl text-center font-medium mb-4"></div>
 
         <button id="btn-next-vocab-quiz" onclick="nextVocabQuizQuestion()" class="hidden w-full py-3 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition">
@@ -239,31 +227,21 @@
           </button>
         </div>
 
-        <!-- 大題選擇頁籤 -->
         <div class="flex flex-wrap gap-2 mb-6">
-          <button onclick="switchExamPart(1)" id="ex-part-btn-1" class="px-4 py-2 rounded-xl text-sm font-bold bg-morandi-500 text-white transition">
-            Ⅰ. 五十音填空
-          </button>
-          <button onclick="switchExamPart(2)" id="ex-part-btn-2" class="px-4 py-2 rounded-xl text-sm font-bold bg-morandi-100 text-morandi-700 transition">
-            Ⅱ. 聽解數字選擇
-          </button>
-          <button onclick="switchExamPart(3)" id="ex-part-btn-3" class="px-4 py-2 rounded-xl text-sm font-bold bg-morandi-100 text-morandi-700 transition">
-            Ⅲ&Ⅳ. 聽寫與錯字改正
-          </button>
+          <button onclick="switchExamPart(1)" id="ex-part-btn-1" class="px-4 py-2 rounded-xl text-sm font-bold bg-morandi-500 text-white transition">Ⅰ. 五十音填空</button>
+          <button onclick="switchExamPart(2)" id="ex-part-btn-2" class="px-4 py-2 rounded-xl text-sm font-bold bg-morandi-100 text-morandi-700 transition">Ⅱ. 聽解數字選擇</button>
+          <button onclick="switchExamPart(3)" id="ex-part-btn-3" class="px-4 py-2 rounded-xl text-sm font-bold bg-morandi-100 text-morandi-700 transition">Ⅲ&Ⅳ. 聽寫與錯字改正</button>
         </div>
 
-        <!-- 大題 I: 清音50音填空表 -->
+        <!-- 大題 I -->
         <div id="exam-part-1" class="exam-part">
           <div class="bg-morandi-50 p-4 rounded-xl mb-4 border border-morandi-200 flex justify-between items-center">
             <div>
               <h3 class="font-bold text-morandi-800 mb-1">Ⅰ 使用平仮名填空 清音５０音表</h3>
               <p class="text-xs text-morandi-600">每次點擊重新出題會隨機變換挖空格子。</p>
             </div>
-            <button onclick="renderExamPart1Table()" class="px-3 py-1.5 bg-morandi-200 hover:bg-morandi-300 text-morandi-800 text-xs font-bold rounded-lg transition">
-              重新隨機挖空
-            </button>
+            <button onclick="renderExamPart1Table()" class="px-3 py-1.5 bg-morandi-200 hover:bg-morandi-300 text-morandi-800 text-xs font-bold rounded-lg transition">重新隨機挖空</button>
           </div>
-
           <div class="overflow-x-auto mb-6">
             <table class="w-full min-w-[500px] text-center border-collapse bg-white rounded-lg overflow-hidden border border-morandi-200">
               <thead>
@@ -281,69 +259,48 @@
                   <th class="py-2 border border-morandi-300">わ行</th>
                 </tr>
               </thead>
-              <tbody id="kana-table-body" class="text-base font-medium">
-                <!-- 由 JavaScript 繪製清音表 -->
-              </tbody>
+              <tbody id="kana-table-body" class="text-base font-medium"></tbody>
             </table>
           </div>
-
           <div class="flex justify-end space-x-3">
-            <button onclick="checkPart1Answers()" class="px-6 py-2.5 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition">
-              對答案
-            </button>
+            <button onclick="checkPart1Answers()" class="px-6 py-2.5 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition">對答案</button>
           </div>
         </div>
 
-        <!-- 大題 II: 聽解數字選擇題 -->
+        <!-- 大題 II -->
         <div id="exam-part-2" class="exam-part hidden">
           <div class="bg-morandi-50 p-4 rounded-xl mb-6 border border-morandi-200 flex justify-between items-center">
             <div>
               <h3 class="font-bold text-morandi-800 mb-1">Ⅱ 聽解從選項找正確解答 (請使用數字寫)</h3>
               <p class="text-xs text-morandi-600">每次重新出題會隨機抽取 5 個題目並打散選項順序。</p>
             </div>
-            <button onclick="renderExamPart2Questions()" class="px-3 py-1.5 bg-morandi-200 hover:bg-morandi-300 text-morandi-800 text-xs font-bold rounded-lg transition">
-              重新隨機出題
-            </button>
+            <button onclick="renderExamPart2Questions()" class="px-3 py-1.5 bg-morandi-200 hover:bg-morandi-300 text-morandi-800 text-xs font-bold rounded-lg transition">重新隨機出題</button>
           </div>
-
-          <div id="part2-questions-container" class="space-y-6">
-            <!-- 動態生成聽力題目卡 -->
-          </div>
-
+          <div id="part2-questions-container" class="space-y-6"></div>
           <div class="mt-8 flex justify-end">
-            <button onclick="checkPart2Answers()" class="px-6 py-2.5 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition">
-              交卷 / 對答案
-            </button>
+            <button onclick="checkPart2Answers()" class="px-6 py-2.5 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition">交卷 / 對答案</button>
           </div>
         </div>
 
-        <!-- 大題 III & IV: 聽寫與錯字改正拼音填空 -->
+        <!-- 大題 III & IV -->
         <div id="exam-part-3" class="exam-part hidden">
           <div class="bg-morandi-50 p-4 rounded-xl mb-6 border border-morandi-200 flex justify-between items-center">
             <div>
               <h3 class="font-bold text-morandi-800 mb-1">Ⅲ、Ⅳ 語彙聽寫與錯字改正 (請全部用平假名寫)</h3>
               <p class="text-xs text-morandi-600">每次點擊會從題庫中隨機抽取 5 題進行測驗。</p>
             </div>
-            <button onclick="renderExamPart3Questions()" class="px-3 py-1.5 bg-morandi-200 hover:bg-morandi-300 text-morandi-800 text-xs font-bold rounded-lg transition">
-              重新隨機出題
-            </button>
+            <button onclick="renderExamPart3Questions()" class="px-3 py-1.5 bg-morandi-200 hover:bg-morandi-300 text-morandi-800 text-xs font-bold rounded-lg transition">重新隨機出題</button>
           </div>
-
-          <div id="part3-questions-container" class="space-y-4">
-            <!-- 動態生成題目 -->
-          </div>
-
+          <div id="part3-questions-container" class="space-y-4"></div>
           <div class="mt-8 flex justify-end">
-            <button onclick="checkPart3Answers()" class="px-6 py-2.5 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition">
-              交卷 / 對答案
-            </button>
+            <button onclick="checkPart3Answers()" class="px-6 py-2.5 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition">交卷 / 對答案</button>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- TAB 4: 錯題本 -->
+    <!-- TAB 4: 錯題本與多元測驗模式 -->
     <section id="sec-errors" class="tab-content hidden">
       <div class="bg-white rounded-2xl p-6 md:p-8 card-shadow border border-morandi-100">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-morandi-200 pb-4 mb-6 gap-4">
@@ -354,8 +311,8 @@
             <p class="text-sm text-morandi-600 mt-1">系統已自動為您紀錄在單字測驗或模擬考中答錯的詞彙。</p>
           </div>
 
-          <div class="flex space-x-2">
-            <button onclick="startErrorReviewQuiz()" id="btn-review-quiz" class="px-4 py-2 bg-morandi-500 text-white text-sm font-bold rounded-xl hover:bg-morandi-600 transition flex items-center shadow">
+          <div class="flex flex-wrap gap-2">
+            <button onclick="openErrorReviewModal()" id="btn-review-quiz" class="px-4 py-2 bg-morandi-500 text-white text-sm font-bold rounded-xl hover:bg-morandi-600 transition flex items-center shadow">
               <i class="fa-solid fa-bolt mr-1.5"></i>開始錯題特訓
             </button>
             <button onclick="clearAllErrors()" class="px-3 py-2 border border-morandi-300 text-morandi-600 text-sm font-medium rounded-xl hover:bg-morandi-100 transition">
@@ -365,33 +322,93 @@
         </div>
 
         <!-- 錯題卡片清單 -->
-        <div id="error-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- 動態繪製錯題 -->
-        </div>
+        <div id="error-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 
-        <!-- 錯題特訓測驗區 -->
-        <div id="error-review-quiz-container" class="hidden max-w-xl mx-auto bg-morandi-50 border border-morandi-200 rounded-2xl p-6 mt-6">
-          <div class="flex justify-between items-center mb-4">
-            <span class="text-xs font-bold text-morandi-500 bg-white px-3 py-1 rounded-full border border-morandi-200">錯題隨機特訓</span>
-            <button onclick="cancelErrorReview()" class="text-xs text-morandi-500 hover:text-morandi-800 font-medium">關閉測驗</button>
-          </div>
+        <!-- 錯題特訓區 (包含模式選擇與測驗介面) -->
+        <div id="error-review-quiz-container" class="hidden max-w-xl mx-auto bg-morandi-50 border border-morandi-200 rounded-2xl p-6 mt-6 shadow-sm">
+          
+          <!-- 步驟 A: 選擇考法模式 -->
+          <div id="review-setup-view">
+            <div class="flex justify-between items-center mb-4 border-b border-morandi-200 pb-2">
+              <h3 class="font-bold text-morandi-800 text-lg"><i class="fa-solid fa-sliders text-morandi-500 mr-2"></i>選擇錯題特訓考法</h3>
+              <button onclick="cancelErrorReview()" class="text-xs text-morandi-500 hover:text-morandi-800 font-medium">關閉</button>
+            </div>
+            
+            <p class="text-xs text-morandi-600 mb-4">請選擇您希望如何練習錯題本中的單字：</p>
 
-          <div class="text-center mb-6">
-            <span class="text-xs text-morandi-500">請輸入此單字的平假名或中文意思</span>
-            <div id="review-q-prompt" class="text-2xl font-bold text-morandi-800 my-2">--</div>
-            <button onclick="playReviewAudio()" class="text-morandi-500 hover:text-morandi-700 text-sm">
-              <i class="fa-solid fa-volume-high"></i> 播放發音
+            <div class="space-y-3 mb-6">
+              <label class="flex items-center p-3 bg-white border border-morandi-200 rounded-xl cursor-pointer hover:border-morandi-400 transition">
+                <input type="radio" name="review-mode-type" value="jp_to_zh" checked class="text-morandi-500 focus:ring-morandi-400">
+                <div class="ml-3">
+                  <span class="font-bold text-sm text-morandi-800 block">日文選中文 (四選一)</span>
+                  <span class="text-xs text-morandi-500">畫面顯示平假名，請點選正確的中文意思</span>
+                </div>
+              </label>
+
+              <label class="flex items-center p-3 bg-white border border-morandi-200 rounded-xl cursor-pointer hover:border-morandi-400 transition">
+                <input type="radio" name="review-mode-type" value="zh_to_jp" class="text-morandi-500 focus:ring-morandi-400">
+                <div class="ml-3">
+                  <span class="font-bold text-sm text-morandi-800 block">中文選日文 (四選一)</span>
+                  <span class="text-xs text-morandi-500">畫面顯示中文意思，請點選正確的平假名</span>
+                </div>
+              </label>
+
+              <label class="flex items-center p-3 bg-white border border-morandi-200 rounded-xl cursor-pointer hover:border-morandi-400 transition">
+                <input type="radio" name="review-mode-type" value="audio_to_zh" class="text-morandi-500 focus:ring-morandi-400">
+                <div class="ml-3">
+                  <span class="font-bold text-sm text-morandi-800 block">聽語音選中文 (四選一)</span>
+                  <span class="text-xs text-morandi-500">聆聽日文單字發音，請點選正確中文</span>
+                </div>
+              </label>
+
+              <label class="flex items-center p-3 bg-white border border-morandi-200 rounded-xl cursor-pointer hover:border-morandi-400 transition">
+                <input type="radio" name="review-mode-type" value="type_kana" class="text-morandi-500 focus:ring-morandi-400">
+                <div class="ml-3">
+                  <span class="font-bold text-sm text-morandi-800 block">平假名聽寫 / 手寫填空</span>
+                  <span class="text-xs text-morandi-500">看中文提示或聽發音，自行輸入平假名</span>
+                </div>
+              </label>
+            </div>
+
+            <button onclick="startReviewQuizWithSelectedMode()" class="w-full py-3 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition shadow">
+              開始練習
             </button>
           </div>
 
-          <div class="space-y-3">
-            <input type="text" id="review-user-input" placeholder="請輸入平假名 (例: あか)..." class="w-full px-4 py-2.5 rounded-xl border border-morandi-300 focus:outline-none focus:border-morandi-500 text-center font-medium">
-            <button onclick="checkReviewAnswer()" class="w-full py-2.5 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition">
-              確認答案
+          <!-- 步驟 B: 測驗進行中介面 -->
+          <div id="review-play-view" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-xs font-bold text-morandi-500 bg-white px-3 py-1 rounded-full border border-morandi-200" id="review-progress-label">錯題 1 / 5</span>
+              <button onclick="openErrorReviewModal()" class="text-xs text-morandi-500 hover:text-morandi-800 font-bold underline">重選模式</button>
+            </div>
+
+            <!-- 題目區域 -->
+            <div class="text-center mb-6 bg-white p-6 rounded-xl border border-morandi-200">
+              <div class="text-xs text-morandi-500 font-medium mb-1" id="review-prompt-text">請選擇正確中文</div>
+              <div id="review-main-display" class="text-3xl font-bold text-morandi-800 my-2">--</div>
+              <button id="btn-play-review-audio" onclick="playReviewAudio()" class="text-morandi-500 hover:text-morandi-700 text-sm mt-1 inline-flex items-center">
+                <i class="fa-solid fa-volume-high mr-1"></i> 播放發音
+              </button>
+            </div>
+
+            <!-- 選擇題容器 -->
+            <div id="review-multiple-choice-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4"></div>
+
+            <!-- 手寫輸入框容器 -->
+            <div id="review-input-container" class="hidden space-y-3">
+              <input type="text" id="review-user-input" placeholder="請輸入平假名 (例: あか)..." class="w-full px-4 py-2.5 rounded-xl border border-morandi-300 focus:outline-none focus:border-morandi-500 text-center font-medium">
+              <button onclick="checkReviewInputAnswer()" class="w-full py-2.5 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition">
+                確認答案
+              </button>
+            </div>
+
+            <div id="review-feedback" class="mt-4 text-center text-sm font-semibold hidden"></div>
+
+            <button id="btn-next-review-q" onclick="nextReviewQuestion()" class="hidden w-full mt-4 py-2.5 bg-morandi-500 text-white font-bold rounded-xl hover:bg-morandi-600 transition">
+              下一題
             </button>
           </div>
 
-          <div id="review-feedback" class="mt-4 text-center text-sm font-semibold hidden"></div>
         </div>
       </div>
     </section>
@@ -513,7 +530,6 @@
 
     const ALL_VOCAB = [...VOCAB_P15, ...VOCAB_P28];
 
-    // 大題 II 完整題庫池 (每次隨機抽5題)
     const MASTER_PART2_POOL = [
       { kana: 'げんじゅうみん', correct: '原住民', wordObj: VOCAB_P28[0] },
       { kana: 'れんあい', correct: '戀愛', wordObj: VOCAB_P28[17] },
@@ -529,7 +545,6 @@
       { kana: 'さくら', correct: '櫻花', wordObj: VOCAB_P15[47] }
     ];
 
-    // 大題 III/IV 完整題庫池 (每次隨機抽5題)
     const MASTER_PART3_POOL = [
       { prompt: '淡水 (請寫出平假名)', correctKana: 'たんすい', wordObj: VOCAB_P28[31] },
       { prompt: '感動 (錯字改正題：×かんど -> 請填正確平假名)', correctKana: 'かんどう', wordObj: VOCAB_P28[23] },
@@ -711,13 +726,11 @@
       });
     }
 
-    // 單字測驗 (隨機出題)
     function startVocabQuiz() {
       const pool = getFilteredVocab();
       quizCurrentList = [...pool].sort(() => 0.5 - Math.random()).slice(0, 10);
       quizIndex = 0;
       quizScore = 0;
-      // 確保切換回正常測驗視圖
       document.getElementById('vocab-quiz-view').innerHTML = `
         <div class="flex justify-between items-center mb-4">
           <span class="text-xs font-bold uppercase tracking-wider text-morandi-500 bg-morandi-100 px-3 py-1 rounded-full" id="quiz-count-label">第 1 / 10 題</span>
@@ -766,7 +779,6 @@
       document.getElementById('quiz-feedback').classList.add('hidden');
       document.getElementById('btn-next-vocab-quiz').classList.add('hidden');
 
-      // 隨機產生選項
       const options = [q];
       while(options.length < 4) {
         const randItem = ALL_VOCAB[Math.floor(Math.random() * ALL_VOCAB.length)];
@@ -819,7 +831,7 @@
     }
 
     /* =========================================================
-       6. TAB 3: 模擬考試 (大題 I, II, III, IV) 隨機出題
+       6. TAB 3: 模擬考試 (大題 I, II, III, IV)
        ========================================================= */
     function switchExamPart(partNum) {
       document.querySelectorAll('.exam-part').forEach(el => el.classList.add('hidden'));
@@ -848,7 +860,6 @@
       alert('所有模擬考試題庫已重新隨機出題！');
     }
 
-    // 大題 I: 清音表 (隨機挖空)
     function renderExamPart1Table() {
       const tbody = document.getElementById('kana-table-body');
       tbody.innerHTML = '';
@@ -867,7 +878,6 @@
           if(!item || item.h === '') {
             rowHtml += `<td class="py-2 border border-morandi-200 bg-gray-100"></td>`;
           } else {
-            // 完全隨機挖空約 35%
             const isBlank = Math.random() < 0.35;
             if(isBlank) {
               rowHtml += `
@@ -901,20 +911,16 @@
       alert(`五十音測驗對答案完成！得分：${correct} / ${inputs.length}`);
     }
 
-    // 大題 II: 聽解數字選擇題 (隨機抽 5 題並打散選項順序)
     function renderExamPart2Questions() {
       const container = document.getElementById('part2-questions-container');
       container.innerHTML = '';
 
-      // 從完整題庫隨機抽 5 題
       const shuffledPool = [...MASTER_PART2_POOL].sort(() => 0.5 - Math.random());
       currentPart2Questions = shuffledPool.slice(0, 5);
 
-      // 所有可能的干擾選項庫
       const allMeanings = MASTER_PART2_POOL.map(p => p.correct);
 
       currentPart2Questions.forEach((q, idx) => {
-        // 隨機挑選 3 個其他錯誤選項 + 1個正確答案
         let opts = [q.correct];
         while(opts.length < 5) {
           const randMeaning = allMeanings[Math.floor(Math.random() * allMeanings.length)];
@@ -922,7 +928,6 @@
             opts.push(randMeaning);
           }
         }
-        // 打散選項順序
         opts.sort(() => 0.5 - Math.random());
         q.shuffledOptions = opts;
         q.correctNum = (opts.indexOf(q.correct) + 1).toString();
@@ -968,7 +973,6 @@
       });
     }
 
-    // 大題 III & IV: 聽寫與錯字改正 (隨機抽 5 題)
     function renderExamPart3Questions() {
       const container = document.getElementById('part3-questions-container');
       container.innerHTML = '';
@@ -1016,7 +1020,7 @@
     }
 
     /* =========================================================
-       7. TAB 4: 錯題本與強化特訓
+       7. TAB 4: 錯題本與自訂多元考法特訓
        ========================================================= */
     function addErrorLog(wordObj) {
       if(!wordObj || !wordObj.kana) return;
@@ -1106,45 +1110,158 @@
       });
     }
 
-    let currentReviewItem = null;
+    // 錯題特訓模式控制變數
+    let reviewSelectedMode = 'jp_to_zh'; // 'jp_to_zh' | 'zh_to_jp' | 'audio_to_zh' | 'type_kana'
+    let reviewQueue = [];
+    let reviewCurrentIdx = 0;
+    let reviewCurrentItem = null;
 
-    function startErrorReviewQuiz() {
+    function openErrorReviewModal() {
       if(errorLog.length === 0) return;
       document.getElementById('error-review-quiz-container').classList.remove('hidden');
-      nextReviewQuestion();
+      document.getElementById('review-setup-view').classList.remove('hidden');
+      document.getElementById('review-play-view').classList.add('hidden');
     }
 
     function cancelErrorReview() {
       document.getElementById('error-review-quiz-container').classList.add('hidden');
     }
 
-    function nextReviewQuestion() {
-      // 隨機從錯題本中抽一題
-      currentReviewItem = errorLog[Math.floor(Math.random() * errorLog.length)];
-      document.getElementById('review-q-prompt').innerText = currentReviewItem.meaning;
-      document.getElementById('review-user-input').value = '';
+    function startReviewQuizWithSelectedMode() {
+      reviewSelectedMode = document.querySelector('input[name="review-mode-type"]:checked').value;
+      reviewQueue = [...errorLog].sort(() => 0.5 - Math.random());
+      reviewCurrentIdx = 0;
+
+      document.getElementById('review-setup-view').classList.add('hidden');
+      document.getElementById('review-play-view').classList.remove('hidden');
+
+      renderReviewQuestion();
+    }
+
+    function renderReviewQuestion() {
+      if(reviewCurrentIdx >= reviewQueue.length) {
+        // 特訓完畢
+        document.getElementById('review-play-view').innerHTML = `
+          <div class="text-center py-6">
+            <i class="fa-solid fa-circle-check text-5xl text-emerald-500 mb-3"></i>
+            <h3 class="text-xl font-bold text-morandi-800 mb-2">錯題特訓完畢！</h3>
+            <p class="text-xs text-morandi-600 mb-4">您已經把錯題本的所有單字複習完一遍了。</p>
+            <button onclick="openErrorReviewModal()" class="px-5 py-2 bg-morandi-500 text-white font-bold text-sm rounded-xl hover:bg-morandi-600 transition">
+              再練一次 / 切換考法
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      reviewCurrentItem = reviewQueue[reviewCurrentIdx];
+      document.getElementById('review-progress-label').innerText = `錯題 ${reviewCurrentIdx + 1} / ${reviewQueue.length}`;
       document.getElementById('review-feedback').classList.add('hidden');
+      document.getElementById('btn-next-review-q').classList.add('hidden');
+
+      const promptTextEl = document.getElementById('review-prompt-text');
+      const mainDisplayEl = document.getElementById('review-main-display');
+      const btnAudioEl = document.getElementById('btn-play-review-audio');
+      const mcContainer = document.getElementById('review-multiple-choice-container');
+      const inputContainer = document.getElementById('review-input-container');
+
+      mcContainer.innerHTML = '';
+      mcContainer.classList.add('hidden');
+      inputContainer.classList.add('hidden');
+
+      // 根據模式設定題目畫面
+      if(reviewSelectedMode === 'jp_to_zh') {
+        promptTextEl.innerText = '請看【日文平假名】選擇正確中文意思';
+        mainDisplayEl.innerText = reviewCurrentItem.kana;
+        btnAudioEl.classList.remove('hidden');
+        setupMultipleChoiceOptions('meaning');
+      } 
+      else if(reviewSelectedMode === 'zh_to_jp') {
+        promptTextEl.innerText = '請看【中文意思】選擇正確日文平假名';
+        mainDisplayEl.innerText = reviewCurrentItem.meaning;
+        btnAudioEl.classList.add('hidden');
+        setupMultipleChoiceOptions('kana');
+      } 
+      else if(reviewSelectedMode === 'audio_to_zh') {
+        promptTextEl.innerText = '請【聽日文發音】選擇正確中文意思';
+        mainDisplayEl.innerText = '🔊 ...';
+        btnAudioEl.classList.remove('hidden');
+        speakJapanese(reviewCurrentItem.kana);
+        setupMultipleChoiceOptions('meaning');
+      } 
+      else if(reviewSelectedMode === 'type_kana') {
+        promptTextEl.innerText = '請看提示輸入正確【日文平假名】';
+        mainDisplayEl.innerText = reviewCurrentItem.meaning;
+        btnAudioEl.classList.remove('hidden');
+        inputContainer.classList.remove('hidden');
+        document.getElementById('review-user-input').value = '';
+      }
     }
 
-    function playReviewAudio() {
-      if(currentReviewItem) speakJapanese(currentReviewItem.kana);
+    // 建立特訓選擇題選項 (看日選中 / 看中選日 / 聽音選中)
+    function setupMultipleChoiceOptions(targetField) {
+      const mcContainer = document.getElementById('review-multiple-choice-container');
+      mcContainer.classList.remove('hidden');
+
+      // 建立選項卡片 (包含正解與從全部單字庫抽出的三個干擾項)
+      let opts = [reviewCurrentItem];
+      while(opts.length < 4) {
+        const randItem = ALL_VOCAB[Math.floor(Math.random() * ALL_VOCAB.length)];
+        if(!opts.some(o => o.kana === randItem.kana)) {
+          opts.push(randItem);
+        }
+      }
+      opts.sort(() => 0.5 - Math.random());
+
+      opts.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'p-3 bg-white border border-morandi-200 rounded-xl text-morandi-800 font-bold hover:bg-morandi-100 transition text-center shadow-sm';
+        btn.innerText = opt[targetField];
+        btn.onclick = () => answerReviewMultipleChoice(opt, btn);
+        mcContainer.appendChild(btn);
+      });
     }
 
-    function checkReviewAnswer() {
+    function answerReviewMultipleChoice(selectedOpt, btnEl) {
+      const feedback = document.getElementById('review-feedback');
+      feedback.classList.remove('hidden');
+
+      if(selectedOpt.kana === reviewCurrentItem.kana) {
+        feedback.className = 'mt-4 p-3 rounded-xl text-center font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+        feedback.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5"></i>答對了！ ${reviewCurrentItem.kana} (${reviewCurrentItem.meaning})`;
+      } else {
+        feedback.className = 'mt-4 p-3 rounded-xl text-center font-bold bg-rose-100 text-rose-800 border border-rose-300';
+        feedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1.5"></i>答錯了！正解為：${reviewCurrentItem.kana} - ${reviewCurrentItem.meaning}`;
+      }
+
+      document.getElementById('btn-next-review-q').classList.remove('hidden');
+      const btns = document.querySelectorAll('#review-multiple-choice-container button');
+      btns.forEach(b => b.disabled = true);
+    }
+
+    function checkReviewInputAnswer() {
       const input = document.getElementById('review-user-input').value.trim();
       const feedback = document.getElementById('review-feedback');
       feedback.classList.remove('hidden');
 
-      if(input === currentReviewItem.kana || (currentReviewItem.romaji && input.toLowerCase() === currentReviewItem.romaji.toLowerCase())) {
-        feedback.className = 'mt-4 text-center text-sm font-semibold text-emerald-600 bg-emerald-50 p-2 rounded-lg';
-        feedback.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i>太棒了，答對了！';
-        setTimeout(() => {
-          nextReviewQuestion();
-        }, 1200);
+      if(input === reviewCurrentItem.kana || (reviewCurrentItem.romaji && input.toLowerCase() === reviewCurrentItem.romaji.toLowerCase())) {
+        feedback.className = 'mt-4 p-3 rounded-xl text-center font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+        feedback.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5"></i>太棒了，答對了！`;
       } else {
-        feedback.className = 'mt-4 text-center text-sm font-semibold text-rose-600 bg-rose-50 p-2 rounded-lg';
-        feedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i>再試試看！解答是：${currentReviewItem.kana}`;
+        feedback.className = 'mt-4 p-3 rounded-xl text-center font-bold bg-rose-100 text-rose-800 border border-rose-300';
+        feedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1.5"></i>解答是：${reviewCurrentItem.kana} (${reviewCurrentItem.romaji})`;
       }
+
+      document.getElementById('btn-next-review-q').classList.remove('hidden');
+    }
+
+    function nextReviewQuestion() {
+      reviewCurrentIdx++;
+      renderReviewQuestion();
+    }
+
+    function playReviewAudio() {
+      if(reviewCurrentItem) speakJapanese(reviewCurrentItem.kana);
     }
 
     /* =========================================================
